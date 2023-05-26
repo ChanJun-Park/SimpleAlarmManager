@@ -8,7 +8,7 @@ import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AlarmDao {
+interface AlarmEntityDao {
 	@Insert
 	fun insert(alarm: Alarm)
 
