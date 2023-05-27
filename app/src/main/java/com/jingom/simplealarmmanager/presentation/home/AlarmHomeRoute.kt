@@ -9,4 +9,8 @@ object AlarmHomeRoute {
 	fun getDetailScreenRouteWithArg(alarmId: Long): String {
 		return DETAIL_SCREEN.replace("{$DETAIL_SCREEN_ARG}", "$alarmId")
 	}
+
+	fun getDetailScreenRouteWithoutArg(): String {
+		return DETAIL_SCREEN
+	}
 }

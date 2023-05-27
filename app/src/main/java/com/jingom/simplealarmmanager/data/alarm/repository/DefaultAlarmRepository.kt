@@ -21,6 +21,10 @@ class DefaultAlarmRepository(
 		alarmEntityDao.delete(alarm.toDBModel())
 	}
 
+	override suspend fun get(id: Long): Alarm? {
+		return alarmEntityDao.select(id)?.toDomainModel()
+	}
+
 	override fun getAllAlarmFlow(): Flow<List<Alarm>> {
 		return alarmEntityDao.getAllFlow().map {
 			it.map { alarmEntity -> alarmEntity.toDomainModel() }

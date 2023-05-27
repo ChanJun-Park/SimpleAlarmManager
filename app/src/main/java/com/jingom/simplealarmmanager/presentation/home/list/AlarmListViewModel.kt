@@ -28,6 +28,8 @@ class AlarmListViewModel @Inject constructor(
 		}
 
 		initAlarmListState()
+
+		initialized = true
 	}
 
 	private fun initAlarmListState() {

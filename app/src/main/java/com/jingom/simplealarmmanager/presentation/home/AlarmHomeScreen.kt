@@ -28,9 +28,9 @@ fun AlarmHomeScreen(
 			}
 			composable(
 				route = AlarmHomeRoute.DETAIL_SCREEN,
-				arguments = listOf(navArgument(AlarmHomeRoute.DETAIL_SCREEN_ARG) { nullable = false })
+				arguments = listOf(navArgument(AlarmHomeRoute.DETAIL_SCREEN_ARG) { nullable = true })
 			) { navBackStackEntry ->
-				val alarmId = getAlarmIdFromArgs(navBackStackEntry) ?: throw IllegalStateException("alarmId must be set before enter into AlarmDetailScreen")
+				val alarmId = getAlarmIdFromArgs(navBackStackEntry)
 
 				AlarmDetailScreen(
 					alarmId = alarmId,

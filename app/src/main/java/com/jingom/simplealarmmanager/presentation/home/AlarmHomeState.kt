@@ -28,7 +28,9 @@ class AlarmHomeState(
 	}
 
 	fun navigateToAdd() {
+		val addRoute = AlarmHomeRoute.getDetailScreenRouteWithoutArg()
 
+		navController.navigate(addRoute)
 	}
 
 	fun navigateToListFromDetail() {

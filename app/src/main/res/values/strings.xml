@@ -3,4 +3,13 @@
     <string name="alarm_list">Alarm List</string>
     <string name="alarm_empty">There is no alarm.</string>
     <string name="add_alarm">Add Alarm</string>
+    <string name="delete_alarm">Delete</string>
+    <string name="save_alarm">Save</string>
+    <string name="cancel_alarm_edit">Cancel</string>
+    <string name="alarm_name">Alarm Name</string>
+    <string name="alarm_time">Alarm Time</string>
+    <string name="edit_alarm_time">Edit Alarm Time</string>
+    <string name="failed_to_loading_alarm">Failed to Load alarm</string>
+    <string name="edit_alarm">Edit Alarm</string>
+    <string name="back_button">Back Button</string>
 </resources>
