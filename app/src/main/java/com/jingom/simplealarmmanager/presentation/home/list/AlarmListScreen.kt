@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.common.date.DateTimeFormatters
 import com.jingom.simplealarmmanager.common.date.formatWithLocale
@@ -75,7 +76,7 @@ fun AlarmListScreen(
 		AlarmListHeader(onAddAlarmClick = onAddAlarmClick)
 		when (alarmListState) {
 			is AlarmListState.Loading -> AlarmListLoading()
-			is AlarmListState.Success -> AlarmList(
+			is AlarmListState.Success -> AlarmListLoaded(
 				alarmList = alarmListState.alarmList,
 				onAlarmClick = onAlarmClick,
 				onAlarmOnToggle = onAlarmOnToggle
@@ -131,6 +132,15 @@ private fun AlarmListScreenPreview() {
 @Composable
 private fun AlarmListLoading() {
 	Box(Modifier.fillMaxSize()) {
+		CircularProgressIndicator(
+			modifier = Modifier.size(100.dp)
+		)
+	}
+}
+
+@Composable
+private fun AlarmListEmpty() {
+	Box(Modifier.fillMaxSize()) {
 		Text(
 			text = stringResource(R.string.alarm_empty),
 			style = MaterialTheme.typography.titleLarge,
@@ -142,9 +152,26 @@ private fun AlarmListLoading() {
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-private fun AlarmListLoadingPreview() {
+private fun AlarmListEmptyPreview() {
 	Surface(Modifier.fillMaxSize()) {
-		AlarmListLoading()
+		AlarmListEmpty()
+	}
+}
+
+@Composable
+private fun AlarmListLoaded(
+	alarmList: List<Alarm>,
+	onAlarmClick: (Alarm) -> Unit = {},
+	onAlarmOnToggle: (Alarm) -> Unit = {}
+) {
+	if (alarmList.isEmpty()) {
+		AlarmListEmpty()
+	} else {
+		AlarmList(
+			alarmList = alarmList,
+			onAlarmClick = onAlarmClick,
+			onAlarmOnToggle = onAlarmOnToggle
+		)
 	}
 }
 
@@ -278,7 +305,7 @@ private fun AlarmListPreview() {
 	Surface(
 		color = Color.Gray
 	) {
-		AlarmList(
+		AlarmListLoaded(
 			alarmList = alarmList
 		)
 	}
