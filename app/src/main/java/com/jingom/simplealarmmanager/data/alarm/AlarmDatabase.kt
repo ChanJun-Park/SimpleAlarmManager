@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.jingom.simplealarmmanager.data.alarm.dao.AlarmEntityDao
 import com.jingom.simplealarmmanager.data.alarm.entity.AlarmEntity
 
-@Database(entities = [AlarmEntity::class], version = 1)
+@Database(entities = [AlarmEntity::class], version = 1, exportSchema = false)
 abstract class AlarmDatabase: RoomDatabase() {
 	abstract fun getAlarmEntityDao(): AlarmEntityDao
 }

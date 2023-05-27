@@ -16,5 +16,5 @@ interface AlarmEntityDao {
 	fun delete(alarm: AlarmEntity)
 
 	@Query("SELECT * FROM alarm")
-	fun getAllFlow(): Flow<AlarmEntity>
+	fun getAllFlow(): Flow<List<AlarmEntity>>
 }

@@ -13,9 +13,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface DataModule {
 
-	@Provides
-	@Singleton
-	fun provideAlarmRepository(alarmEntityDao: AlarmEntityDao): AlarmRepository {
-		return DefaultAlarmRepository(alarmEntityDao)
+	companion object {
+		@Provides
+		@Singleton
+		fun provideAlarmRepository(alarmEntityDao: AlarmEntityDao): AlarmRepository {
+			return DefaultAlarmRepository(alarmEntityDao)
+		}
 	}
 }

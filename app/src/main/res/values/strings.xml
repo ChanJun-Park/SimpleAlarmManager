@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">SimpleAlarmManager</string>
+    <string name="alarm_list">Alarm List</string>
+    <string name="alarm_empty">There is no alarm.</string>
+    <string name="add_alarm">Add Alarm</string>
 </resources>

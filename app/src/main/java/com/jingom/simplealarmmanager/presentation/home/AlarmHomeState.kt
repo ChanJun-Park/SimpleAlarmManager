@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 
 @Composable
 fun rememberAlarmHomeState(
@@ -20,10 +21,14 @@ class AlarmHomeState(
 	private val currentRoute: String?
 		get() = navController.currentDestination?.route
 
-	fun navigateToDetail(alarmId: Long) {
-		val detailRoute = AlarmHomeRoute.getDetailScreenRouteWithArg(alarmId)
+	fun navigateToDetail(alarm: Alarm) {
+		val detailRoute = AlarmHomeRoute.getDetailScreenRouteWithArg(alarm.id)
 
 		navController.navigate(detailRoute)
+	}
+
+	fun navigateToAdd() {
+
 	}
 
 	fun navigateToListFromDetail() {

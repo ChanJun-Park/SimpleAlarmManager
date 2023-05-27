@@ -1,6 +1,6 @@
 package com.jingom.simplealarmmanager.data.di
 
-import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.jingom.simplealarmmanager.data.alarm.AlarmDatabase
 import com.jingom.simplealarmmanager.data.alarm.dao.AlarmEntityDao
@@ -15,19 +15,21 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface DBModule {
 
-	@Provides
-	@Singleton
-	fun provideAlarmDatabase(@ApplicationContext context: Application): AlarmDatabase {
-		return Room.databaseBuilder(
-			context,
-			AlarmDatabase::class.java,
-			"alarmDatabase"
-		).build()
-	}
+	companion object {
+		@Provides
+		@Singleton
+		fun provideAlarmDatabase(@ApplicationContext context: Context): AlarmDatabase {
+			return Room.databaseBuilder(
+				context,
+				AlarmDatabase::class.java,
+				"alarmDatabase"
+			).build()
+		}
 
-	@Provides
-	@Singleton
-	fun provideAlarmEntityDao(db: AlarmDatabase): AlarmEntityDao {
-		return db.getAlarmEntityDao()
+		@Provides
+		@Singleton
+		fun provideAlarmEntityDao(db: AlarmDatabase): AlarmEntityDao {
+			return db.getAlarmEntityDao()
+		}
 	}
 }

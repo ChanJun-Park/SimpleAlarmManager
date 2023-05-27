@@ -7,6 +7,7 @@ import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 import com.jingom.simplealarmmanager.domain.repository.AlarmRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 
 class DefaultAlarmRepository(
 	private val alarmEntityDao: AlarmEntityDao
@@ -20,7 +21,9 @@ class DefaultAlarmRepository(
 		alarmEntityDao.delete(alarm.toDBModel())
 	}
 
-	override fun getAllAlarmFlow(): Flow<Alarm> {
-		return alarmEntityDao.getAllFlow().map { it.toDomainModel() }
+	override fun getAllAlarmFlow(): Flow<List<Alarm>> {
+		return alarmEntityDao.getAllFlow().map {
+			it.map { alarmEntity -> alarmEntity.toDomainModel() }
+		}
 	}
 }
