@@ -3,13 +3,14 @@ package com.jingom.simplealarmmanager.data.alarm.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.jingom.simplealarmmanager.data.alarm.entity.AlarmEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AlarmEntityDao {
-	@Insert
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	suspend fun insert(alarm: AlarmEntity)
 
 	@Delete
