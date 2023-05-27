@@ -41,7 +41,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.common.date.DateTimeFormatters
 import com.jingom.simplealarmmanager.common.date.formatWithLocale
@@ -77,13 +76,18 @@ fun AlarmDetailScreen(
 	}
 
 	(alarmDetailState as? AlarmDetailState.Success)?.let {
-		if (it.editState is AlarmDetailEditState.Saved) {
+		if (needToFinishDetailScreen(it.editState)) {
 			LaunchedEffect(key1 = true) {
 				alarmHomeState.navigateToListFromDetail()
 			}
+			return@let
 		}
 	}
 }
+
+@Composable
+private fun needToFinishDetailScreen(editState: AlarmDetailEditState) =
+	editState is AlarmDetailEditState.Saved || editState is AlarmDetailEditState.Deleted
 
 @Composable
 fun AlarmDetailScreen(
