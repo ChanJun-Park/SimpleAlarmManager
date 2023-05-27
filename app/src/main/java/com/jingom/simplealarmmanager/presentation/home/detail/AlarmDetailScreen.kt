@@ -2,6 +2,7 @@ package com.jingom.simplealarmmanager.presentation.home.detail
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -241,6 +242,8 @@ private fun AlarmName(
 			text = stringResource(R.string.alarm_name),
 			style = MaterialTheme.typography.titleSmall
 		)
+		
+		Spacer(modifier = Modifier.height(5.dp))
 
 		TextField(
 			value = alarmName,
@@ -275,7 +278,10 @@ private fun AlarmTime(
 		) {
 			Text(
 				text = alarmTime.formatWithLocale(DateTimeFormatters.ALARM_TIME_AM_PM),
-				style = MaterialTheme.typography.titleLarge
+				style = MaterialTheme.typography.titleLarge,
+				modifier = Modifier.clickable {
+					timeDialogState.show()
+				}
 			)
 			IconButton(onClick = { timeDialogState.show() }) {
 				Image(
