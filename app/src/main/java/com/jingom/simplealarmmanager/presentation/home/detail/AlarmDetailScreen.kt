@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jingom.simplealarmmanager.R
@@ -55,7 +56,7 @@ import java.time.LocalTime
 fun AlarmDetailScreen(
 	alarmId: Long?,
 	alarmHomeState: AlarmHomeState,
-	viewModel: AlarmDetailViewModel = viewModel()
+	viewModel: AlarmDetailViewModel = hiltViewModel()
 ) {
 	val alarmDetailState by viewModel.alarmDetailState.collectAsStateWithLifecycle()
 	val (alarmNameForTextField, setAlarmNameForTextField) = viewModel.alarmNameForTextField

@@ -23,6 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jingom.simplealarmmanager.R
@@ -46,7 +48,7 @@ import java.time.LocalTime
 @Composable
 fun AlarmListScreen(
 	alarmHomeState: AlarmHomeState,
-	viewModel: AlarmListViewModel = viewModel()
+	viewModel: AlarmListViewModel = hiltViewModel()
 ) {
 	val alarmListState by viewModel.alarmListState.collectAsStateWithLifecycle()
 
@@ -56,6 +58,10 @@ fun AlarmListScreen(
 		onAddAlarmClick = alarmHomeState::navigateToAdd,
 		onAlarmOnToggle = viewModel::alarmOnToggle,
 	)
+
+	LaunchedEffect(key1 = true) {
+		viewModel.init()
+	}
 }
 
 @Composable
