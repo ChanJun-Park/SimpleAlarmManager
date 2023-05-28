@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 
 class AlarmReceiver: BroadcastReceiver() {
 
@@ -11,6 +12,7 @@ class AlarmReceiver: BroadcastReceiver() {
 		context ?: return
 		intent ?: return
 
+		Log.d("AlarmReceiver", "AlarmReceiver called")
 
 		val alarmInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			intent.getParcelableExtra(AlarmInfo.KEY, AlarmInfo::class.java)

@@ -1,6 +1,7 @@
 package com.jingom.simplealarmmanager.alarm
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
 import androidx.work.CoroutineWorker
@@ -25,6 +26,7 @@ class AlarmNotifyWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, params) {
 
 	override suspend fun doWork(): Result {
+		Log.d("AlarmNotifyWorker", "AlarmNotifyWorker called")
 		val alarmId = params.inputData.getLong(KEY_ALARM_ID, -1L)
 		if (alarmId == -1L) {
 			return Result.success()

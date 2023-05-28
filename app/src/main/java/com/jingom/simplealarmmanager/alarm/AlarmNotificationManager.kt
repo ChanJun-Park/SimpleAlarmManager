@@ -3,6 +3,7 @@ package com.jingom.simplealarmmanager.alarm
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.common.notification.NotificationChannelType
@@ -21,6 +22,8 @@ class DefaultAlarmNotificationManager(
 	private val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 	override fun notify(alarm: Alarm) {
+		Log.d("AlarmNotificationManager", "AlarmNotificationManager called")
+
 		val largeIcon = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.ic_launcher_foreground)
 		val appChannelId = NotificationChannelType.APP_ALARM.id
 

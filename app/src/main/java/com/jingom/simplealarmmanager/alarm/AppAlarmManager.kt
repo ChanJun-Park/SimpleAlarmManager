@@ -6,6 +6,7 @@ import android.app.AlarmManager.AlarmClockInfo
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -28,6 +29,7 @@ class DefaultAppAlarmManager(
 
 	@SuppressLint("MissingPermission")
 	override fun registerAlarm(alarm: Alarm, targetDate: LocalDate) {
+		Log.d("AppAlarmManager", "AppAlarmManager")
 		alarmManager.setAlarmClock(
 			getAlarmClockInfo(alarm, targetDate),
 			getAlarmPendingIntent(alarm)
