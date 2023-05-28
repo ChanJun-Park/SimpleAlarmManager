@@ -1,0 +1,72 @@
+package com.jingom.simplealarmmanager.alarm
+
+import android.app.AlarmManager
+import android.app.AlarmManager.AlarmClockInfo
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+
+interface AppAlarmManager {
+	fun registerAlarm(alarm: Alarm)
+	fun cancelAlarm(alarm: Alarm)
+}
+
+class DefaultAppAlarmManager(
+	private val applicationContext: Context
+) : AppAlarmManager {
+
+	private val alarmManager = applicationContext.getSystemService(
+		Context.ALARM_SERVICE
+	) as AlarmManager
+
+	override fun registerAlarm(alarm: Alarm) {
+		alarmManager.setAlarmClock(
+			getAlarmClockInfo(alarm),
+			getAlarmPendingIntent(alarm)
+		)
+	}
+
+	override fun cancelAlarm(alarm: Alarm) {
+		alarmManager.cancel(
+			getAlarmPendingIntent(alarm)
+		)
+	}
+
+	private fun getAlarmClockInfo(alarm: Alarm): AlarmClockInfo {
+		val offset = ZoneOffset.of(ZoneOffset.systemDefault().id)
+		val alarmInstant = LocalDateTime.of(
+			LocalDate.now(),
+			alarm.time
+		).toInstant(offset)
+
+		return AlarmClockInfo(
+			alarmInstant.toEpochMilli(),
+			null
+		)
+	}
+
+	private fun getAlarmPendingIntent(alarm: Alarm): PendingIntent {
+		val pendingIntentFlag = PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+
+		return PendingIntent.getBroadcast(
+			applicationContext,
+			getAlarmRequestCode(alarm),
+			getAlarmIntent(alarm),
+			pendingIntentFlag
+		)
+	}
+
+	private fun getAlarmIntent(alarm: Alarm): Intent {
+		return Intent(applicationContext, AlarmReceiver::class.java).apply {
+			putExtra(AlarmInfo.KEY, alarm.toIntentModel())
+		}
+	}
+
+	private fun getAlarmRequestCode(alarm: Alarm): Int {
+		return alarm.id.toInt()
+	}
+}
