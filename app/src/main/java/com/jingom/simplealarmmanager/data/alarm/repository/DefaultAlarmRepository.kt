@@ -25,6 +25,14 @@ class DefaultAlarmRepository(
 		return alarmEntityDao.select(id)?.toDomainModel()
 	}
 
+	override suspend fun getAll(): List<Alarm> {
+		return alarmEntityDao.selectAll().map { it.toDomainModel() }
+	}
+
+	override suspend fun isAlarmEmpty(): Boolean {
+		return alarmEntityDao.getAlarmCount() == 0L
+	}
+
 	override fun getAllAlarmFlow(): Flow<List<Alarm>> {
 		return alarmEntityDao.getAllFlow().map {
 			it.map { alarmEntity -> alarmEntity.toDomainModel() }

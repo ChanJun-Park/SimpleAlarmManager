@@ -14,5 +14,7 @@ interface AlarmRepository {
 	suspend fun insert(alarm: Alarm)
 	suspend fun delete(alarm: Alarm)
 	suspend fun get(id: Long): Alarm?
+	suspend fun getAll(): List<Alarm>
+	suspend fun isAlarmEmpty(): Boolean
 	fun getAllAlarmFlow(): Flow<List<Alarm>>
 }

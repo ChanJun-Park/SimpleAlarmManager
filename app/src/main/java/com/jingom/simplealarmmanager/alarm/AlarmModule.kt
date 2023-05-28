@@ -2,6 +2,8 @@ package com.jingom.simplealarmmanager.alarm
 
 import android.app.AlarmManager
 import android.content.Context
+import com.jingom.simplealarmmanager.common.BootReceiverManager
+import com.jingom.simplealarmmanager.common.DefaultBootReceiverManager
 import com.jingom.simplealarmmanager.domain.repository.AlarmRepository
 import dagger.Module
 import dagger.Provides
@@ -29,9 +31,10 @@ interface AlarmModule {
 		@Singleton
 		fun provideAlarmController(
 			alarmRepository: AlarmRepository,
-			alarmManager: AppAlarmManager
+			alarmManager: AppAlarmManager,
+			bootReceiverManager: BootReceiverManager
 		): AlarmController {
-			return DefaultAlarmController(alarmRepository, alarmManager)
+			return DefaultAlarmController(alarmRepository, alarmManager, bootReceiverManager)
 		}
 	}
 }

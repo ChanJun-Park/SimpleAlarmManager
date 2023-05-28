@@ -20,5 +20,11 @@ interface AlarmEntityDao {
 	suspend fun select(id: Long): AlarmEntity?
 
 	@Query("SELECT * FROM alarm")
+	suspend fun selectAll(): List<AlarmEntity>
+
+	@Query("SELECT COUNT(*) FROM alarm")
+	suspend fun getAlarmCount(): Long
+
+	@Query("SELECT * FROM alarm")
 	fun getAllFlow(): Flow<List<AlarmEntity>>
 }
