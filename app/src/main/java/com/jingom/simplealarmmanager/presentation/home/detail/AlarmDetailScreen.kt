@@ -246,7 +246,7 @@ private fun AlarmName(
 			text = stringResource(R.string.alarm_name),
 			style = MaterialTheme.typography.titleSmall
 		)
-		
+
 		Spacer(modifier = Modifier.height(5.dp))
 
 		TextField(

@@ -1,5 +1,6 @@
 package com.jingom.simplealarmmanager.alarm
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.AlarmManager.AlarmClockInfo
 import android.app.PendingIntent
@@ -8,7 +9,9 @@ import android.content.Intent
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
 interface AppAlarmManager {
 	fun registerAlarm(alarm: Alarm)
@@ -23,6 +26,7 @@ class DefaultAppAlarmManager(
 		Context.ALARM_SERVICE
 	) as AlarmManager
 
+	@SuppressLint("MissingPermission")
 	override fun registerAlarm(alarm: Alarm) {
 		alarmManager.setAlarmClock(
 			getAlarmClockInfo(alarm),
@@ -37,11 +41,11 @@ class DefaultAppAlarmManager(
 	}
 
 	private fun getAlarmClockInfo(alarm: Alarm): AlarmClockInfo {
-		val offset = ZoneOffset.of(ZoneOffset.systemDefault().id)
-		val alarmInstant = LocalDateTime.of(
+		val alarmInstant = ZonedDateTime.of(
 			LocalDate.now(),
-			alarm.time
-		).toInstant(offset)
+			alarm.time,
+			ZoneId.systemDefault()
+		).toInstant()
 
 		return AlarmClockInfo(
 			alarmInstant.toEpochMilli(),

@@ -1,6 +1,8 @@
 package com.jingom.simplealarmmanager.common
 
 import android.content.Context
+import com.jingom.simplealarmmanager.common.notification.DefaultNotificationChannelManager
+import com.jingom.simplealarmmanager.common.notification.NotificationChannelManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +22,15 @@ interface CommonModule {
 			applicationContext: Context
 		): BootReceiverManager {
 			return DefaultBootReceiverManager(applicationContext)
+		}
+
+		@Provides
+		@Singleton
+		fun provideNotificationChannelManager(
+			@ApplicationContext
+			applicationContext: Context
+		): NotificationChannelManager {
+			return DefaultNotificationChannelManager(applicationContext)
 		}
 	}
 }

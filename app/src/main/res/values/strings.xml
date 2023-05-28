@@ -12,4 +12,10 @@
     <string name="failed_to_loading_alarm">Failed to Load alarm</string>
     <string name="edit_alarm">Edit Alarm</string>
     <string name="back_button">Back Button</string>
+    <string name="alarm">Alarm</string>
+    <string name="notification_permission_required">Notification Permission Request</string>
+    <string name="notification_permission_required_description">Notification Permission is needed for this app to notify alarms you set.</string>
+    <string name="cannot_working_notification_permission_revoked">Notification Permission is revoked. Cannot work.</string>
+    <string name="go_setting_to_grant_notification_permission">Please grant Notification Permission in App Settings</string>
+    <string name="confirm">Confirm</string>
 </resources>

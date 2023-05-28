@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import com.jingom.simplealarmmanager.presentation.home.AlarmHomeScreen
+import com.jingom.simplealarmmanager.presentation.home.rememberNotificationPermissionState
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,7 +28,12 @@ class MainActivity : ComponentActivity() {
 					color = MaterialTheme.colorScheme.background,
 					modifier = Modifier.fillMaxSize()
 				) {
-					AlarmHomeScreen()
+					AlarmHomeScreen(
+						notificationPermissionState = rememberNotificationPermissionState(this),
+						onFinish = {
+							finish()
+						}
+					)
 				}
 			}
 		}
