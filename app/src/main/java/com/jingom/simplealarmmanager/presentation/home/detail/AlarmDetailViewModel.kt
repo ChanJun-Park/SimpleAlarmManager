@@ -4,8 +4,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jingom.simplealarmmanager.alarm.AlarmController
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
-import com.jingom.simplealarmmanager.domain.repository.AlarmRepository
 import com.jingom.simplealarmmanager.presentation.home.detail.AlarmDetailEditState.Companion.canEdit
 import com.jingom.simplealarmmanager.presentation.home.detail.AlarmDetailEditState.Companion.canSave
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlarmDetailViewModel @Inject constructor(
-	private val alarmRepository: AlarmRepository
+	private val alarmController: AlarmController
 ) : ViewModel() {
 
 	private val _alarmDetailState = MutableStateFlow<AlarmDetailState>(AlarmDetailState.Loading)
@@ -60,7 +60,7 @@ class AlarmDetailViewModel @Inject constructor(
 
 	private fun setEditAlarmDetailState(alarmId: Long) {
 		viewModelScope.launch {
-			val alarm = alarmRepository.get(alarmId)
+			val alarm = alarmController.get(alarmId)
 
 			_alarmDetailState.update {
 				if (alarm != null) {
@@ -129,7 +129,7 @@ class AlarmDetailViewModel @Inject constructor(
 		)
 
 		viewModelScope.launch {
-			alarmRepository.insert(editedAlarm)
+			alarmController.insert(editedAlarm)
 			_alarmDetailState.update {
 				currentDetailState.copy(
 					editState = AlarmDetailEditState.Saved
@@ -145,7 +145,7 @@ class AlarmDetailViewModel @Inject constructor(
 		}
 
 		viewModelScope.launch {
-			alarmRepository.delete(currentDetailState.alarm)
+			alarmController.delete(currentDetailState.alarm)
 			_alarmDetailState.update {
 				currentDetailState.copy(
 					editState = AlarmDetailEditState.Deleted
