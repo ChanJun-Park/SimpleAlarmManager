@@ -36,5 +36,14 @@ interface AlarmModule {
 		): AlarmController {
 			return DefaultAlarmController(alarmRepository, alarmManager, bootReceiverManager)
 		}
+
+		@Provides
+		@Singleton
+		fun provideAlarmNotificationManager(
+			@ApplicationContext
+			applicationContext: Context
+		): AlarmNotificationManager {
+			return DefaultAlarmNotificationManager(applicationContext)
+		}
 	}
 }

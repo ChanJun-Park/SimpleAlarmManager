@@ -14,7 +14,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 interface AppAlarmManager {
-	fun registerAlarm(alarm: Alarm)
+	fun registerAlarm(alarm: Alarm, targetDate: LocalDate = LocalDate.now())
 	fun cancelAlarm(alarm: Alarm)
 }
 
@@ -27,9 +27,9 @@ class DefaultAppAlarmManager(
 	) as AlarmManager
 
 	@SuppressLint("MissingPermission")
-	override fun registerAlarm(alarm: Alarm) {
+	override fun registerAlarm(alarm: Alarm, targetDate: LocalDate) {
 		alarmManager.setAlarmClock(
-			getAlarmClockInfo(alarm),
+			getAlarmClockInfo(alarm, targetDate),
 			getAlarmPendingIntent(alarm)
 		)
 	}
@@ -40,9 +40,9 @@ class DefaultAppAlarmManager(
 		)
 	}
 
-	private fun getAlarmClockInfo(alarm: Alarm): AlarmClockInfo {
+	private fun getAlarmClockInfo(alarm: Alarm, targetDate: LocalDate = LocalDate.now()): AlarmClockInfo {
 		val alarmInstant = ZonedDateTime.of(
-			LocalDate.now(),
+			targetDate,
 			alarm.time,
 			ZoneId.systemDefault()
 		).toInstant()
