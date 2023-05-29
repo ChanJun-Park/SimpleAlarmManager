@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AlarmEntityDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-	suspend fun insert(alarm: AlarmEntity)
+	suspend fun insert(alarm: AlarmEntity): Long
 
 	@Delete
 	suspend fun delete(alarm: AlarmEntity)

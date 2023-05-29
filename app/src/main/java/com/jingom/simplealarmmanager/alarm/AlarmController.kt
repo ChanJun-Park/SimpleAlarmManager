@@ -25,12 +25,15 @@ class DefaultAlarmController(
 			appAlarmManager.cancelAlarm(prevAlarm)
 		}
 
-		appAlarmManager.registerAlarm(alarm)
+		val id = alarmRepository.insert(alarm)
+		if (id > 0) {
+			val insertedAlarm = alarm.copy(id = id)
 
-		alarmRepository.insert(alarm)
+			appAlarmManager.registerAlarm(insertedAlarm)
 
-		if (bootReceiverManager.bootReceiverEnabled.not()) {
-			bootReceiverManager.enableReceiver()
+			if (bootReceiverManager.bootReceiverEnabled.not()) {
+				bootReceiverManager.enableReceiver()
+			}
 		}
 	}
 
