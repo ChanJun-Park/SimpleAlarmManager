@@ -3,6 +3,7 @@ package com.jingom.simplealarmmanager.alarm
 import android.app.NotificationManager
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.jingom.simplealarmmanager.R
@@ -39,6 +40,9 @@ class DefaultAlarmNotificationManager(
 			.setWhen(System.currentTimeMillis())
 			.setLargeIcon(largeIcon)
 			.setSmallIcon(R.drawable.ic_launcher_foreground)
+			.setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+			.setVibrate(longArrayOf(1000, 500, 500, 1000, 1000))
+			.setOnlyAlertOnce(true)
 			.setAutoCancel(true)
 			.build()
 
