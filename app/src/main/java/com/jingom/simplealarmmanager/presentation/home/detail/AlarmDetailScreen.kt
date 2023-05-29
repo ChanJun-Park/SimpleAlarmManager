@@ -126,6 +126,7 @@ fun AlarmDetailScreen(
 		}
 
 		AlarmDetailBottomMenu(
+			alarmDetailState = alarmDetailState,
 			onCancelClick = onCancelClick,
 			onSaveClick = onSaveClick,
 			onDeleteClick = onDeleteClick,
@@ -317,30 +318,35 @@ private fun AlarmTime(
 
 @Composable
 private fun AlarmDetailBottomMenu(
+	alarmDetailState: AlarmDetailState,
 	onCancelClick: () -> Unit = {},
 	onSaveClick: () -> Unit = {},
 	onDeleteClick: () -> Unit = {}
 ) {
-	Row(
-		horizontalArrangement = Arrangement.SpaceEvenly,
-		verticalAlignment = Alignment.CenterVertically,
-		modifier = Modifier
-			.fillMaxWidth()
-			.wrapContentHeight()
-			.padding(vertical = dimensionResource(R.dimen.common_horizontal_space))
-	) {
-		BottomMenuButton(
-			onClick = onDeleteClick,
-			text = stringResource(R.string.delete_alarm)
-		)
-		BottomMenuButton(
-			onClick = onCancelClick,
-			text = stringResource(R.string.cancel_alarm_edit),
-		)
-		BottomMenuButton(
-			onClick = onSaveClick,
-			text = stringResource(R.string.save_alarm),
-		)
+	if (alarmDetailState is AlarmDetailState.Success) {
+		Row(
+			horizontalArrangement = Arrangement.SpaceEvenly,
+			verticalAlignment = Alignment.CenterVertically,
+			modifier = Modifier
+				.fillMaxWidth()
+				.wrapContentHeight()
+				.padding(vertical = dimensionResource(R.dimen.common_horizontal_space))
+		) {
+			if (alarmDetailState.isSavedAlarm) {
+				BottomMenuButton(
+					onClick = onDeleteClick,
+					text = stringResource(R.string.delete_alarm)
+				)
+			}
+			BottomMenuButton(
+				onClick = onCancelClick,
+				text = stringResource(R.string.cancel_alarm_edit),
+			)
+			BottomMenuButton(
+				onClick = onSaveClick,
+				text = stringResource(R.string.save_alarm),
+			)
+		}
 	}
 }
 
@@ -367,7 +373,12 @@ private fun BottomMenuButton(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun AlarmDetailBottomMenuPreview() {
+	val alarmDetailState = AlarmDetailState.Success(
+		alarm = Alarm(1, "test", LocalTime.of(13, 0, 0), true),
+		editState = AlarmDetailEditState.Initialized
+	)
+
 	Box {
-		AlarmDetailBottomMenu()
+		AlarmDetailBottomMenu(alarmDetailState)
 	}
 }

@@ -8,7 +8,10 @@ sealed class AlarmDetailState {
 	data class Success(
 		val alarm: Alarm,
 		val editState: AlarmDetailEditState
-	): AlarmDetailState()
+	): AlarmDetailState() {
+		val isSavedAlarm: Boolean
+			get() = alarm.id != Alarm.INITIAL_ALARM_ID
+	}
 }
 
 sealed class AlarmDetailEditState {
