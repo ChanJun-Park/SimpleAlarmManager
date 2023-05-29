@@ -26,7 +26,7 @@ class DefaultAlarmController(
 		}
 
 		val id = alarmRepository.insert(alarm)
-		if (id > 0) {
+		if (id > 0 && alarm.alarmOn) {
 			val insertedAlarm = alarm.copy(id = id)
 
 			appAlarmManager.registerAlarm(insertedAlarm)

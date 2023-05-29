@@ -2,8 +2,8 @@ package com.jingom.simplealarmmanager.presentation.home.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jingom.simplealarmmanager.alarm.AlarmController
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
-import com.jingom.simplealarmmanager.domain.repository.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
-	private val alarmRepository: AlarmRepository
-): ViewModel() {
+	private val alarmController: AlarmController
+) : ViewModel() {
 
 	private var initialized: Boolean = false
 
@@ -34,7 +34,7 @@ class AlarmListViewModel @Inject constructor(
 
 	private fun initAlarmListState() {
 		viewModelScope.launch {
-			alarmRepository
+			alarmController
 				.getAllAlarmFlow()
 				.collectLatest { alarmList ->
 					_alarmListState.update {
@@ -46,7 +46,7 @@ class AlarmListViewModel @Inject constructor(
 
 	fun alarmOnToggle(alarm: Alarm) {
 		viewModelScope.launch {
-			alarmRepository.insert(
+			alarmController.insert(
 				alarm.copy(
 					alarmOn = alarm.alarmOn.not()
 				)
