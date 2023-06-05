@@ -43,11 +43,23 @@ class DefaultAppAlarmManager(
 	}
 
 	private fun getAlarmClockInfo(alarm: Alarm, targetDate: LocalDate = LocalDate.now()): AlarmClockInfo {
-		val alarmInstant = ZonedDateTime.of(
+		val nowInstant = ZonedDateTime.now(
+			ZoneId.systemDefault()
+		).toInstant()
+
+		var alarmInstant = ZonedDateTime.of(
 			targetDate,
 			alarm.time,
 			ZoneId.systemDefault()
 		).toInstant()
+
+		if (alarmInstant < nowInstant) {
+			alarmInstant = ZonedDateTime.of(
+				targetDate.plusDays(1L),
+				alarm.time,
+				ZoneId.systemDefault()
+			).toInstant()
+		}
 
 		return AlarmClockInfo(
 			alarmInstant.toEpochMilli(),
