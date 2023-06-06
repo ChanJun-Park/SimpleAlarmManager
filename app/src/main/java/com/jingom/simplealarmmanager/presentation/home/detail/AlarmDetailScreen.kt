@@ -1,7 +1,6 @@
 package com.jingom.simplealarmmanager.presentation.home.detail
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +22,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -49,6 +49,7 @@ import com.jingom.simplealarmmanager.presentation.home.AlarmHomeState
 import com.jingom.simplealarmmanager.presentation.home.detail.AlarmDetailEditState.Companion.canEdit
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalTime
@@ -150,9 +151,10 @@ private fun AlarmDetailToolbar(
 		},
 		navigationIcon = {
 			IconButton(onClick = onUpButtonClick) {
-				Image(
+				Icon(
 					imageVector = Icons.Default.ArrowBack,
-					contentDescription = stringResource(R.string.back_button)
+					contentDescription = stringResource(R.string.back_button),
+					tint = MaterialTheme.colorScheme.onBackground
 				)
 			}
 		},
@@ -295,9 +297,10 @@ private fun AlarmTime(
 				}
 			)
 			IconButton(onClick = { timeDialogState.show() }) {
-				Image(
+				Icon(
 					imageVector = Icons.Default.Edit,
-					contentDescription = stringResource(R.string.edit_alarm_time)
+					contentDescription = stringResource(R.string.edit_alarm_time),
+					tint = MaterialTheme.colorScheme.onBackground
 				)
 			}
 		}
@@ -305,6 +308,7 @@ private fun AlarmTime(
 
 	MaterialDialog(
 		dialogState = timeDialogState,
+		backgroundColor = MaterialTheme.colorScheme.background,
 		buttons = {
 			positiveButton(text = "OK") {
 
@@ -315,7 +319,18 @@ private fun AlarmTime(
 		}
 	) {
 		timepicker(
-			initialTime = alarmTime
+			initialTime = alarmTime,
+			colors = TimePickerDefaults.colors(
+				activeBackgroundColor = MaterialTheme.colorScheme.primaryContainer,
+				inactiveBackgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+				activeTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+				inactiveTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+				inactivePeriodBackground = MaterialTheme.colorScheme.surfaceVariant,
+				selectorColor = MaterialTheme.colorScheme.secondary,
+				selectorTextColor = MaterialTheme.colorScheme.onSecondary,
+				headerTextColor = MaterialTheme.colorScheme.onSurface,
+				borderColor = MaterialTheme.colorScheme.primary
+			)
 		) {
 			onAlarmTimeChanged(it)
 		}
