@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +45,7 @@ import com.jingom.simplealarmmanager.common.date.DateTimeFormatters
 import com.jingom.simplealarmmanager.common.date.formatWithLocale
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 import com.jingom.simplealarmmanager.presentation.home.AlarmHomeState
+import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import java.time.LocalTime
 
 @Composable
@@ -119,13 +121,15 @@ private fun AlarmListScreenPreview() {
 	val alarmListState = AlarmListState.Success(
 		alarmList = alarmList
 	)
-	Surface(
-		color = Color.Gray.copy(alpha = 0.1f),
-		modifier = Modifier.fillMaxSize()
-	) {
-		AlarmListScreen(
-			alarmListState = alarmListState
-		)
+	SimpleAlarmManagerTheme {
+		Surface(
+			color = Color.Gray.copy(alpha = 0.1f),
+			modifier = Modifier.fillMaxSize()
+		) {
+			AlarmListScreen(
+				alarmListState = alarmListState
+			)
+		}
 	}
 }
 
@@ -153,8 +157,10 @@ private fun AlarmListEmpty() {
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun AlarmListEmptyPreview() {
-	Surface(Modifier.fillMaxSize()) {
-		AlarmListEmpty()
+	SimpleAlarmManagerTheme {
+		Surface(Modifier.fillMaxSize()) {
+			AlarmListEmpty()
+		}
 	}
 }
 
@@ -260,13 +266,15 @@ private fun AlarmItemPreview() {
 	var test by remember {
 		mutableStateOf(alarm)
 	}
-	Surface(color = Color.Black) {
-		AlarmItem(
-			alarm = test,
-			onAlarmOnToggle = {
-				test = test.copy(alarmOn = test.alarmOn.not())
-			}
-		)
+	SimpleAlarmManagerTheme {
+		Surface(color = Color.Black) {
+			AlarmItem(
+				alarm = test,
+				onAlarmOnToggle = {
+					test = test.copy(alarmOn = test.alarmOn.not())
+				}
+			)
+		}
 	}
 }
 
@@ -301,13 +309,14 @@ private fun AlarmListPreview() {
 			time = LocalTime.of(18, 13, 0)
 		)
 	)
-
-	Surface(
-		color = Color.Gray
-	) {
-		AlarmListLoaded(
-			alarmList = alarmList
-		)
+	SimpleAlarmManagerTheme {
+		Surface(
+			color = Color.Gray
+		) {
+			AlarmListLoaded(
+				alarmList = alarmList
+			)
+		}
 	}
 }
 
@@ -344,7 +353,9 @@ private fun AlarmListHeader(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun AlarmListHeaderPreview() {
-	Surface {
-		AlarmListHeader()
+	SimpleAlarmManagerTheme {
+		Surface {
+			AlarmListHeader()
+		}
 	}
 }

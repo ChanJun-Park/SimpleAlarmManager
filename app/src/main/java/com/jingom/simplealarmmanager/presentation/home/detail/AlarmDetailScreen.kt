@@ -47,6 +47,7 @@ import com.jingom.simplealarmmanager.common.date.formatWithLocale
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 import com.jingom.simplealarmmanager.presentation.home.AlarmHomeState
 import com.jingom.simplealarmmanager.presentation.home.detail.AlarmDetailEditState.Companion.canEdit
+import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -163,8 +164,10 @@ private fun AlarmDetailToolbar(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun AlarmDetailToolbarPreview() {
-	Surface {
-		AlarmDetailToolbar()
+	SimpleAlarmManagerTheme {
+		Surface {
+			AlarmDetailToolbar()
+		}
 	}
 }
 
@@ -219,7 +222,9 @@ private fun AlarmDetailScreenPreview() {
 		editState = AlarmDetailEditState.Initialized
 	)
 
-	AlarmDetailScreen(alarmDetailState)
+	SimpleAlarmManagerTheme {
+		AlarmDetailScreen(alarmDetailState)
+	}
 }
 
 @Preview(name = "Loading", showBackground = true)
@@ -228,10 +233,11 @@ private fun AlarmDetailScreenPreview() {
 private fun AlarmDetailScreenPreview2() {
 	val alarmDetailState = AlarmDetailState.Loading
 
-	AlarmDetailScreen(alarmDetailState)
+	SimpleAlarmManagerTheme {
+		AlarmDetailScreen(alarmDetailState)
+	}
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AlarmName(
 	alarmName: String = "",
@@ -378,7 +384,9 @@ private fun AlarmDetailBottomMenuPreview() {
 		editState = AlarmDetailEditState.Initialized
 	)
 
-	Box {
-		AlarmDetailBottomMenu(alarmDetailState)
+	SimpleAlarmManagerTheme {
+		Box {
+			AlarmDetailBottomMenu(alarmDetailState)
+		}
 	}
 }
