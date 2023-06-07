@@ -6,7 +6,7 @@ import com.jingom.simplealarmmanager.domain.repository.AlarmRepository
 import kotlinx.coroutines.flow.Flow
 
 interface AlarmController {
-	suspend fun insert(alarm: Alarm)
+	suspend fun upsert(alarm: Alarm)
 	suspend fun delete(alarm: Alarm)
 	suspend fun get(id: Long): Alarm?
 	suspend fun recoverAllAlarm()
@@ -19,13 +19,13 @@ class DefaultAlarmController(
 	private val bootReceiverManager: BootReceiverManager
 ) : AlarmController {
 
-	override suspend fun insert(alarm: Alarm) {
+	override suspend fun upsert(alarm: Alarm) {
 		val prevAlarm = alarmRepository.get(alarm.id)
 		if (prevAlarm != null) {
 			appAlarmManager.cancelAlarm(prevAlarm)
 		}
 
-		val id = alarmRepository.insert(alarm)
+		val id = alarmRepository.upsert(alarm)
 		if (id > 0 && alarm.alarmOn) {
 			val insertedAlarm = alarm.copy(id = id)
 

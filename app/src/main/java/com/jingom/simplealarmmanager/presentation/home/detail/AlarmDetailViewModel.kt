@@ -129,7 +129,7 @@ class AlarmDetailViewModel @Inject constructor(
 		)
 
 		viewModelScope.launch {
-			alarmController.insert(editedAlarm)
+			alarmController.upsert(editedAlarm)
 			_alarmDetailState.update {
 				currentDetailState.copy(
 					editState = AlarmDetailEditState.Saved

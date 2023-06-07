@@ -13,7 +13,7 @@ class DefaultAlarmRepository(
 	private val alarmEntityDao: AlarmEntityDao
 ): AlarmRepository {
 
-	override suspend fun insert(alarm: Alarm): Long {
+	override suspend fun upsert(alarm: Alarm): Long {
 		return alarmEntityDao.insert(alarm.toDBModel())
 	}
 

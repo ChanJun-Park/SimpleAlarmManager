@@ -46,7 +46,7 @@ class AlarmListViewModel @Inject constructor(
 
 	fun alarmOnToggle(alarm: Alarm) {
 		viewModelScope.launch {
-			alarmController.insert(
+			alarmController.upsert(
 				alarm.copy(
 					alarmOn = alarm.alarmOn.not()
 				)
