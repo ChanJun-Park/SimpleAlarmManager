@@ -47,6 +47,10 @@
         <receiver
                 android:name=".alarm.AlarmReceiver"
                 android:enabled="true" />
+
+        <receiver
+                android:name=".alarm.AlarmNotificationDeleteReceiver"
+                android:exported="false" />
     </application>
 
 </manifest>
