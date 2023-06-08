@@ -38,6 +38,7 @@ class AlarmNotifyWorker @AssistedInject constructor(
 			return Result.success()
 		}
 
+		var mediaPlayer: MediaPlayer? = null
 		val result = runCatching {
 			val alarm = alarmRepository.get(alarmId) ?: run {
 				Log.d("AlarmNotifyWorker", "alarm is null")
@@ -57,13 +58,14 @@ class AlarmNotifyWorker @AssistedInject constructor(
 				0
 			)
 
-			val mediaPlayer = MediaPlayer.create(applicationContext, R.raw.snowfall_butterflies)
-			mediaPlayer.start()
+			mediaPlayer = MediaPlayer.create(applicationContext, R.raw.snowfall_butterflies)
+			mediaPlayer?.start()
 
 			delay(180000L)
-
-			mediaPlayer.release()
 		}
+
+		mediaPlayer?.stop()
+		mediaPlayer?.release()
 
 		return if (result.isFailure) {
 			Result.failure()
