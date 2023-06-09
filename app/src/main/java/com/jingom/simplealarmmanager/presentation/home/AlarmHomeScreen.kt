@@ -19,14 +19,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeRoute
 import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeScreen
-import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeState
-import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimeAlarmDetailScreen
-import com.jingom.simplealarmmanager.presentation.timealarm.list.TimeAlarmListScreen
-import com.jingom.simplealarmmanager.presentation.timealarm.rememberAlarmHomeState
 
 @Composable
 fun AlarmHomeScreen(
@@ -43,6 +38,11 @@ fun AlarmHomeScreen(
 				route = AppRoute.TIME_ALARM_HOME_SCREEN,
 			) {
 				TimeAlarmHomeScreen()
+			}
+			composable(
+				route = AppRoute.TIMER_SCREEN
+			) {
+
 			}
 		}
 	}
