@@ -1,4 +1,4 @@
-package com.jingom.simplealarmmanager.presentation.home.list
+package com.jingom.simplealarmmanager.presentation.timealarm.list
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
@@ -43,21 +43,21 @@ import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.common.date.DateTimeFormatters
 import com.jingom.simplealarmmanager.common.date.formatWithLocale
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
-import com.jingom.simplealarmmanager.presentation.home.AlarmHomeState
+import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeState
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import java.time.LocalTime
 
 @Composable
-fun AlarmListScreen(
-	alarmHomeState: AlarmHomeState,
-	viewModel: AlarmListViewModel = hiltViewModel()
+fun TimeAlarmListScreen(
+	timeAlarmHomeState: TimeAlarmHomeState,
+	viewModel: TimeAlarmListViewModel = hiltViewModel()
 ) {
-	val alarmListState by viewModel.alarmListState.collectAsStateWithLifecycle()
+	val alarmListState by viewModel.timeAlarmListState.collectAsStateWithLifecycle()
 
-	AlarmListScreen(
+	TimeAlarmListScreen(
 		alarmListState = alarmListState,
-		onAlarmClick = alarmHomeState::navigateToDetail,
-		onAddAlarmClick = alarmHomeState::navigateToAdd,
+		onAlarmClick = timeAlarmHomeState::navigateToDetail,
+		onAddAlarmClick = timeAlarmHomeState::navigateToAdd,
 		onAlarmOnToggle = viewModel::alarmOnToggle,
 	)
 
@@ -67,8 +67,8 @@ fun AlarmListScreen(
 }
 
 @Composable
-fun AlarmListScreen(
-	alarmListState: AlarmListState,
+fun TimeAlarmListScreen(
+	alarmListState: TimeAlarmListState,
 	onAlarmClick: (Alarm) -> Unit = {},
 	onAddAlarmClick: () -> Unit = {},
 	onAlarmOnToggle: (Alarm) -> Unit = {}
@@ -76,8 +76,8 @@ fun AlarmListScreen(
 	Column(Modifier.fillMaxSize()) {
 		AlarmListHeader(onAddAlarmClick = onAddAlarmClick)
 		when (alarmListState) {
-			is AlarmListState.Loading -> AlarmListLoading()
-			is AlarmListState.Success -> AlarmListLoaded(
+			is TimeAlarmListState.Loading -> AlarmListLoading()
+			is TimeAlarmListState.Success -> AlarmListLoaded(
 				alarmList = alarmListState.alarmList,
 				onAlarmClick = onAlarmClick,
 				onAlarmOnToggle = onAlarmOnToggle
@@ -117,7 +117,7 @@ private fun AlarmListScreenPreview() {
 			time = LocalTime.of(18, 13, 0)
 		)
 	)
-	val alarmListState = AlarmListState.Success(
+	val alarmListState = TimeAlarmListState.Success(
 		alarmList = alarmList
 	)
 	SimpleAlarmManagerTheme {
@@ -125,7 +125,7 @@ private fun AlarmListScreenPreview() {
 			color = Color.Gray.copy(alpha = 0.1f),
 			modifier = Modifier.fillMaxSize()
 		) {
-			AlarmListScreen(
+			TimeAlarmListScreen(
 				alarmListState = alarmListState
 			)
 		}

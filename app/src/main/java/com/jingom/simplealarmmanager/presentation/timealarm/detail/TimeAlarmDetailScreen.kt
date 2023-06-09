@@ -1,4 +1,4 @@
-package com.jingom.simplealarmmanager.presentation.home.detail
+package com.jingom.simplealarmmanager.presentation.timealarm.detail
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
@@ -45,8 +45,8 @@ import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.common.date.DateTimeFormatters
 import com.jingom.simplealarmmanager.common.date.formatWithLocale
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
-import com.jingom.simplealarmmanager.presentation.home.AlarmHomeState
-import com.jingom.simplealarmmanager.presentation.home.detail.AlarmDetailEditState.Companion.canEdit
+import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeState
+import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimeAlarmDetailEditState.Companion.canEdit
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
@@ -55,20 +55,20 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalTime
 
 @Composable
-fun AlarmDetailScreen(
+fun TimeAlarmDetailScreen(
 	alarmId: Long?,
-	alarmHomeState: AlarmHomeState,
-	viewModel: AlarmDetailViewModel = hiltViewModel()
+	timeAlarmHomeState: TimeAlarmHomeState,
+	viewModel: TimeAlarmDetailViewModel = hiltViewModel()
 ) {
-	val alarmDetailState by viewModel.alarmDetailState.collectAsStateWithLifecycle()
+	val alarmDetailState by viewModel.timeAlarmDetailState.collectAsStateWithLifecycle()
 	val (alarmNameForTextField, setAlarmNameForTextField) = viewModel.alarmNameForTextField
 
-	AlarmDetailScreen(
-		alarmDetailState = alarmDetailState,
+	TimeAlarmDetailScreen(
+		timeAlarmDetailState = alarmDetailState,
 		alarmNameForTextField = alarmNameForTextField,
 		onAlarmNameEdited = setAlarmNameForTextField,
 		onAlarmTimeChanged = viewModel::changeAlarmTime,
-		onCancelClick = alarmHomeState::navigateToListFromDetail,
+		onCancelClick = timeAlarmHomeState::navigateToListFromDetail,
 		onSaveClick = viewModel::saveAlarm,
 		onDeleteClick = viewModel::deleteAlarm
 	)
@@ -77,10 +77,10 @@ fun AlarmDetailScreen(
 		viewModel.init(alarmId)
 	}
 
-	(alarmDetailState as? AlarmDetailState.Success)?.let {
+	(alarmDetailState as? TimeAlarmDetailState.Success)?.let {
 		if (needToFinishDetailScreen(it.editState)) {
 			LaunchedEffect(key1 = true) {
-				alarmHomeState.navigateToListFromDetail()
+				timeAlarmHomeState.navigateToListFromDetail()
 			}
 			return@let
 		}
@@ -88,12 +88,12 @@ fun AlarmDetailScreen(
 }
 
 @Composable
-private fun needToFinishDetailScreen(editState: AlarmDetailEditState) =
-	editState is AlarmDetailEditState.Saved || editState is AlarmDetailEditState.Deleted
+private fun needToFinishDetailScreen(editState: TimeAlarmDetailEditState) =
+	editState is TimeAlarmDetailEditState.Saved || editState is TimeAlarmDetailEditState.Deleted
 
 @Composable
-fun AlarmDetailScreen(
-	alarmDetailState: AlarmDetailState,
+fun TimeAlarmDetailScreen(
+	timeAlarmDetailState: TimeAlarmDetailState,
 	alarmNameForTextField: String = "",
 	onAlarmNameEdited: (String) -> Unit = {},
 	onAlarmTimeChanged: (LocalTime) -> Unit = {},
@@ -115,11 +115,11 @@ fun AlarmDetailScreen(
 				.fillMaxHeight()
 				.weight(1f)
 		) {
-			when (alarmDetailState) {
-				is AlarmDetailState.Fail -> LoadFailScreen()
-				is AlarmDetailState.Loading -> LoadingScreen()
-				is AlarmDetailState.Success -> AlarmDetail(
-					alarmDetailState = alarmDetailState,
+			when (timeAlarmDetailState) {
+				is TimeAlarmDetailState.Fail -> LoadFailScreen()
+				is TimeAlarmDetailState.Loading -> LoadingScreen()
+				is TimeAlarmDetailState.Success -> AlarmDetail(
+					timeAlarmDetailState = timeAlarmDetailState,
 					alarmNameForTextField = alarmNameForTextField,
 					onAlarmNameEdited = onAlarmNameEdited,
 					onAlarmTimeChanged = onAlarmTimeChanged,
@@ -128,7 +128,7 @@ fun AlarmDetailScreen(
 		}
 
 		AlarmDetailBottomMenu(
-			alarmDetailState = alarmDetailState,
+			timeAlarmDetailState = timeAlarmDetailState,
 			onCancelClick = onCancelClick,
 			onSaveClick = onSaveClick,
 			onDeleteClick = onDeleteClick,
@@ -196,7 +196,7 @@ private fun LoadFailScreen() {
 
 @Composable
 private fun AlarmDetail(
-	alarmDetailState: AlarmDetailState.Success,
+	timeAlarmDetailState: TimeAlarmDetailState.Success,
 	alarmNameForTextField: String = "",
 	onAlarmNameEdited: (String) -> Unit = {},
 	onAlarmTimeChanged: (LocalTime) -> Unit = {}
@@ -205,11 +205,11 @@ private fun AlarmDetail(
 		AlarmName(
 			alarmName = alarmNameForTextField,
 			onAlarmNameEdited = onAlarmNameEdited,
-			enabled = alarmDetailState.editState.canEdit()
+			enabled = timeAlarmDetailState.editState.canEdit()
 		)
 		Spacer(modifier = Modifier.height(20.dp))
 		AlarmTime(
-			alarmTime = alarmDetailState.alarm.time,
+			alarmTime = timeAlarmDetailState.alarm.time,
 			onAlarmTimeChanged = onAlarmTimeChanged
 		)
 	}
@@ -219,13 +219,13 @@ private fun AlarmDetail(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun AlarmDetailScreenPreview() {
-	val alarmDetailState = AlarmDetailState.Success(
+	val timeAlarmDetailState = TimeAlarmDetailState.Success(
 		alarm = Alarm(1, "test", LocalTime.of(13, 0, 0), true),
-		editState = AlarmDetailEditState.Initialized
+		editState = TimeAlarmDetailEditState.Initialized
 	)
 
 	SimpleAlarmManagerTheme {
-		AlarmDetailScreen(alarmDetailState)
+		TimeAlarmDetailScreen(timeAlarmDetailState)
 	}
 }
 
@@ -233,10 +233,10 @@ private fun AlarmDetailScreenPreview() {
 @Preview(name = "Loading", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun AlarmDetailScreenPreview2() {
-	val alarmDetailState = AlarmDetailState.Loading
+	val timeAlarmDetailState = TimeAlarmDetailState.Loading
 
 	SimpleAlarmManagerTheme {
-		AlarmDetailScreen(alarmDetailState)
+		TimeAlarmDetailScreen(timeAlarmDetailState)
 	}
 }
 
@@ -339,12 +339,12 @@ private fun AlarmTime(
 
 @Composable
 private fun AlarmDetailBottomMenu(
-	alarmDetailState: AlarmDetailState,
+	timeAlarmDetailState: TimeAlarmDetailState,
 	onCancelClick: () -> Unit = {},
 	onSaveClick: () -> Unit = {},
 	onDeleteClick: () -> Unit = {}
 ) {
-	if (alarmDetailState is AlarmDetailState.Success) {
+	if (timeAlarmDetailState is TimeAlarmDetailState.Success) {
 		Row(
 			horizontalArrangement = Arrangement.SpaceEvenly,
 			verticalAlignment = Alignment.CenterVertically,
@@ -353,7 +353,7 @@ private fun AlarmDetailBottomMenu(
 				.wrapContentHeight()
 				.padding(vertical = dimensionResource(R.dimen.common_horizontal_space))
 		) {
-			if (alarmDetailState.isSavedAlarm) {
+			if (timeAlarmDetailState.isSavedAlarm) {
 				BottomMenuButton(
 					onClick = onDeleteClick,
 					text = stringResource(R.string.delete_alarm)
@@ -394,14 +394,14 @@ private fun BottomMenuButton(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun AlarmDetailBottomMenuPreview() {
-	val alarmDetailState = AlarmDetailState.Success(
+	val timeAlarmDetailState = TimeAlarmDetailState.Success(
 		alarm = Alarm(1, "test", LocalTime.of(13, 0, 0), true),
-		editState = AlarmDetailEditState.Initialized
+		editState = TimeAlarmDetailEditState.Initialized
 	)
 
 	SimpleAlarmManagerTheme {
 		Box {
-			AlarmDetailBottomMenu(alarmDetailState)
+			AlarmDetailBottomMenu(timeAlarmDetailState)
 		}
 	}
 }

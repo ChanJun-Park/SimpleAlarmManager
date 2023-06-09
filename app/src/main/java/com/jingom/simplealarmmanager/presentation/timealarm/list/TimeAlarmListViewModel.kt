@@ -1,4 +1,4 @@
-package com.jingom.simplealarmmanager.presentation.home.list
+package com.jingom.simplealarmmanager.presentation.timealarm.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,14 +13,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AlarmListViewModel @Inject constructor(
+class TimeAlarmListViewModel @Inject constructor(
 	private val alarmController: AlarmController
 ) : ViewModel() {
 
 	private var initialized: Boolean = false
 
-	private val _alarmListState = MutableStateFlow<AlarmListState>(AlarmListState.Loading)
-	val alarmListState = _alarmListState.asStateFlow()
+	private val _timeAlarmListState = MutableStateFlow<TimeAlarmListState>(TimeAlarmListState.Loading)
+	val timeAlarmListState = _timeAlarmListState.asStateFlow()
 
 	fun init() {
 		if (initialized) {
@@ -37,8 +37,8 @@ class AlarmListViewModel @Inject constructor(
 			alarmController
 				.getAllAlarmFlow()
 				.collectLatest { alarmList ->
-					_alarmListState.update {
-						AlarmListState.Success(alarmList)
+					_timeAlarmListState.update {
+						TimeAlarmListState.Success(alarmList)
 					}
 				}
 		}

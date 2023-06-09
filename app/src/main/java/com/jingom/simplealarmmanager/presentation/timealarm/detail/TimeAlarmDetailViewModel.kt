@@ -1,4 +1,4 @@
-package com.jingom.simplealarmmanager.presentation.home.detail
+package com.jingom.simplealarmmanager.presentation.timealarm.detail
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jingom.simplealarmmanager.alarm.AlarmController
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
-import com.jingom.simplealarmmanager.presentation.home.detail.AlarmDetailEditState.Companion.canEdit
-import com.jingom.simplealarmmanager.presentation.home.detail.AlarmDetailEditState.Companion.canSave
+import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimeAlarmDetailEditState.Companion.canEdit
+import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimeAlarmDetailEditState.Companion.canSave
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,12 +18,12 @@ import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
-class AlarmDetailViewModel @Inject constructor(
+class TimeAlarmDetailViewModel @Inject constructor(
 	private val alarmController: AlarmController
 ) : ViewModel() {
 
-	private val _alarmDetailState = MutableStateFlow<AlarmDetailState>(AlarmDetailState.Loading)
-	val alarmDetailState = _alarmDetailState.asStateFlow()
+	private val _timeAlarmDetailState = MutableStateFlow<TimeAlarmDetailState>(TimeAlarmDetailState.Loading)
+	val timeAlarmDetailState = _timeAlarmDetailState.asStateFlow()
 
 	var alarmNameForTextField = mutableStateOf("")
 
@@ -50,10 +50,10 @@ class AlarmDetailViewModel @Inject constructor(
 	}
 
 	private fun setNewAlarmDetailState() {
-		_alarmDetailState.update {
-			AlarmDetailState.Success(
+		_timeAlarmDetailState.update {
+			TimeAlarmDetailState.Success(
 				alarm = Alarm(),
-				editState = AlarmDetailEditState.Initialized
+				editState = TimeAlarmDetailEditState.Initialized
 			)
 		}
 	}
@@ -62,14 +62,14 @@ class AlarmDetailViewModel @Inject constructor(
 		viewModelScope.launch {
 			val alarm = alarmController.get(alarmId)
 
-			_alarmDetailState.update {
+			_timeAlarmDetailState.update {
 				if (alarm != null) {
-					AlarmDetailState.Success(
+					TimeAlarmDetailState.Success(
 						alarm = alarm,
-						editState = AlarmDetailEditState.Initialized
+						editState = TimeAlarmDetailEditState.Initialized
 					)
 				} else {
-					AlarmDetailState.Fail
+					TimeAlarmDetailState.Fail
 				}
 			}
 
@@ -90,8 +90,8 @@ class AlarmDetailViewModel @Inject constructor(
 	}
 
 	private fun updateAlarmNameInState(newAlarmName: String) {
-		val currentDetailState = _alarmDetailState.value
-		if (currentDetailState !is AlarmDetailState.Success) {
+		val currentDetailState = _timeAlarmDetailState.value
+		if (currentDetailState !is TimeAlarmDetailState.Success) {
 			return
 		}
 
@@ -103,20 +103,20 @@ class AlarmDetailViewModel @Inject constructor(
 			return
 		}
 
-		_alarmDetailState.update {
+		_timeAlarmDetailState.update {
 			currentDetailState.copy(
 				alarm = currentDetailState.alarm.copy(
 					name = newAlarmName
 				),
-				editState = AlarmDetailEditState.Edited
+				editState = TimeAlarmDetailEditState.Edited
 			)
 		}
 	}
 
 	fun saveAlarm() {
-		val currentDetailState = _alarmDetailState.value
+		val currentDetailState = _timeAlarmDetailState.value
 		val currentAlarmName = alarmNameForTextField.value
-		if (currentDetailState !is AlarmDetailState.Success) {
+		if (currentDetailState !is TimeAlarmDetailState.Success) {
 			return
 		}
 
@@ -130,33 +130,33 @@ class AlarmDetailViewModel @Inject constructor(
 
 		viewModelScope.launch {
 			alarmController.upsert(editedAlarm)
-			_alarmDetailState.update {
+			_timeAlarmDetailState.update {
 				currentDetailState.copy(
-					editState = AlarmDetailEditState.Saved
+					editState = TimeAlarmDetailEditState.Saved
 				)
 			}
 		}
 	}
 
 	fun deleteAlarm() {
-		val currentDetailState = _alarmDetailState.value
-		if (currentDetailState !is AlarmDetailState.Success) {
+		val currentDetailState = _timeAlarmDetailState.value
+		if (currentDetailState !is TimeAlarmDetailState.Success) {
 			return
 		}
 
 		viewModelScope.launch {
 			alarmController.delete(currentDetailState.alarm)
-			_alarmDetailState.update {
+			_timeAlarmDetailState.update {
 				currentDetailState.copy(
-					editState = AlarmDetailEditState.Deleted
+					editState = TimeAlarmDetailEditState.Deleted
 				)
 			}
 		}
 	}
 
 	fun changeAlarmTime(localTime: LocalTime) {
-		val currentDetailState = _alarmDetailState.value
-		if (currentDetailState !is AlarmDetailState.Success) {
+		val currentDetailState = _timeAlarmDetailState.value
+		if (currentDetailState !is TimeAlarmDetailState.Success) {
 			return
 		}
 
@@ -164,12 +164,12 @@ class AlarmDetailViewModel @Inject constructor(
 			return
 		}
 
-		_alarmDetailState.update {
+		_timeAlarmDetailState.update {
 			currentDetailState.copy(
 				alarm = currentDetailState.alarm.copy(
 					time = localTime
 				),
-				editState = AlarmDetailEditState.Edited
+				editState = TimeAlarmDetailEditState.Edited
 			)
 		}
 	}

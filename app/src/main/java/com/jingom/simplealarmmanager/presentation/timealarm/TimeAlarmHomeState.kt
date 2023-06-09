@@ -1,4 +1,4 @@
-package com.jingom.simplealarmmanager.presentation.home
+package com.jingom.simplealarmmanager.presentation.timealarm
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -10,31 +10,31 @@ import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 @Composable
 fun rememberAlarmHomeState(
 	navController: NavHostController = rememberNavController()
-): AlarmHomeState = remember(navController) {
-	AlarmHomeState(navController)
+): TimeAlarmHomeState = remember(navController) {
+	TimeAlarmHomeState(navController)
 }
 
 @Stable
-class AlarmHomeState(
+class TimeAlarmHomeState(
 	val navController: NavHostController
 ) {
 	private val currentRoute: String?
 		get() = navController.currentDestination?.route
 
 	fun navigateToDetail(alarm: Alarm) {
-		val detailRoute = AlarmHomeRoute.getDetailScreenRouteWithArg(alarm.id)
+		val detailRoute = TimeAlarmHomeRoute.getDetailScreenRouteWithArg(alarm.id)
 
 		navController.navigate(detailRoute)
 	}
 
 	fun navigateToAdd() {
-		val addRoute = AlarmHomeRoute.getDetailScreenRouteWithoutArg()
+		val addRoute = TimeAlarmHomeRoute.getDetailScreenRouteWithoutArg()
 
 		navController.navigate(addRoute)
 	}
 
 	fun navigateToListFromDetail() {
-		if (currentRoute != AlarmHomeRoute.DETAIL_SCREEN) {
+		if (currentRoute != TimeAlarmHomeRoute.DETAIL_SCREEN) {
 			return
 		}
 

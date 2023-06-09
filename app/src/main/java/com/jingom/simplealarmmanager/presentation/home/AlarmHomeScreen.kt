@@ -18,37 +18,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.jingom.simplealarmmanager.R
-import com.jingom.simplealarmmanager.presentation.home.detail.AlarmDetailScreen
-import com.jingom.simplealarmmanager.presentation.home.list.AlarmListScreen
+import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeRoute
+import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeScreen
+import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeState
+import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimeAlarmDetailScreen
+import com.jingom.simplealarmmanager.presentation.timealarm.list.TimeAlarmListScreen
+import com.jingom.simplealarmmanager.presentation.timealarm.rememberAlarmHomeState
 
 @Composable
 fun AlarmHomeScreen(
 	notificationPermissionState: NotificationPermissionState,
-	alarmHomeState: AlarmHomeState = rememberAlarmHomeState(),
 	onFinish: () -> Unit = {}
 ) {
+	val navController = rememberNavController()
 	Surface(modifier = Modifier.fillMaxSize()) {
 		NavHost(
-			navController = alarmHomeState.navController,
-			startDestination = AlarmHomeRoute.LIST_SCREEN
+			navController = navController,
+			startDestination = AppRoute.TIME_ALARM_HOME_SCREEN
 		) {
 			composable(
-				route = AlarmHomeRoute.LIST_SCREEN,
+				route = AppRoute.TIME_ALARM_HOME_SCREEN,
 			) {
-				AlarmListScreen(alarmHomeState = alarmHomeState)
-			}
-			composable(
-				route = AlarmHomeRoute.DETAIL_SCREEN,
-				arguments = listOf(navArgument(AlarmHomeRoute.DETAIL_SCREEN_ARG) { nullable = true })
-			) { navBackStackEntry ->
-				val alarmId = getAlarmIdFromArgs(navBackStackEntry)
-
-				AlarmDetailScreen(
-					alarmId = alarmId,
-					alarmHomeState = alarmHomeState
-				)
+				TimeAlarmHomeScreen()
 			}
 		}
 	}
@@ -59,7 +53,7 @@ fun AlarmHomeScreen(
 	)
 }
 
-private fun getAlarmIdFromArgs(navBackStackEntry: NavBackStackEntry): Long? = navBackStackEntry.arguments?.getString(AlarmHomeRoute.DETAIL_SCREEN_ARG)?.toLongOrNull()
+private fun getAlarmIdFromArgs(navBackStackEntry: NavBackStackEntry): Long? = navBackStackEntry.arguments?.getString(TimeAlarmHomeRoute.DETAIL_SCREEN_ARG)?.toLongOrNull()
 
 @Composable
 private fun NotificationPermissionAlert(
