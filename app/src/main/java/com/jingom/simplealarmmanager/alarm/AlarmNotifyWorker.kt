@@ -1,7 +1,10 @@
 package com.jingom.simplealarmmanager.alarm
 
 import android.content.Context
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.BackoffPolicy
 import androidx.work.CoroutineWorker
@@ -10,9 +13,11 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.domain.repository.AlarmRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
@@ -26,13 +31,13 @@ class AlarmNotifyWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, params) {
 
 	override suspend fun doWork(): Result {
-		Log.d("AlarmNotifyWorker", "AlarmNotifyWorker called")
 		val alarmId = params.inputData.getLong(KEY_ALARM_ID, -1L)
 		if (alarmId == -1L) {
 			return Result.success()
 		}
+		var mediaPlayer: MediaPlayer? = null
 
-		val result = runCatching {
+		return try {
 			val alarm = alarmRepository.get(alarmId) ?: return Result.success()
 			alarmNotificationManager.notify(alarm)
 
@@ -40,18 +45,33 @@ class AlarmNotifyWorker @AssistedInject constructor(
 				alarm,
 				LocalDate.now().plusDays(1)
 			)
-		}
 
-		return if (result.isFailure) {
-			Result.failure()
-		} else {
+			val audioManager = ContextCompat.getSystemService(applicationContext, AudioManager::class.java)
+			audioManager?.setStreamVolume(
+				AudioManager.STREAM_MUSIC,
+				audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).times(0.8).toInt(),
+				0
+			)
+
+			mediaPlayer = MediaPlayer.create(applicationContext, R.raw.snowfall_butterflies)
+			mediaPlayer?.start()
+
+			delay(180000L)
+
 			Result.success()
+		} catch (e: Exception) {
+			Result.failure()
+		} finally {
+			mediaPlayer?.stop()
+			mediaPlayer?.release()
 		}
 	}
 
 	companion object {
 		const val KEY_ALARM_ID = "alarmId"
 		private const val ALARM_NOTIFY = "alarmNotify"
+
+		private fun getUniqueWorkName(alarmId: Long) = "$ALARM_NOTIFY: $alarmId"
 
 		fun schedule(alarmId: Long, context: Context) {
 			val inputData = Data.Builder()
@@ -70,9 +90,17 @@ class AlarmNotifyWorker @AssistedInject constructor(
 			WorkManager
 				.getInstance(context)
 				.enqueueUniqueWork(
-					ALARM_NOTIFY,
+					getUniqueWorkName(alarmId),
 					ExistingWorkPolicy.KEEP,
 					workRequest
+				)
+		}
+
+		fun cancelWork(alarmId: Long, context: Context) {
+			WorkManager
+				.getInstance(context)
+				.cancelUniqueWork(
+					getUniqueWorkName(alarmId)
 				)
 		}
 	}

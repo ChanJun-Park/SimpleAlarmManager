@@ -18,4 +18,5 @@
     <string name="cannot_working_notification_permission_revoked">Notification Permission is revoked. Cannot work.</string>
     <string name="go_setting_to_grant_notification_permission">Please grant Notification Permission in App Settings</string>
     <string name="confirm">Confirm</string>
+    <string name="swipe_to_cancel_alarm">(Swipe to Cancel Alarm)</string>
 </resources>
