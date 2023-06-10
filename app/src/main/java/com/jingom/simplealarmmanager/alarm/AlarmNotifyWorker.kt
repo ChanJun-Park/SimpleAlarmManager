@@ -31,19 +31,14 @@ class AlarmNotifyWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, params) {
 
 	override suspend fun doWork(): Result {
-		Log.d("AlarmNotifyWorker", "AlarmNotifyWorker called")
 		val alarmId = params.inputData.getLong(KEY_ALARM_ID, -1L)
 		if (alarmId == -1L) {
-			Log.d("AlarmNotifyWorker", "alarmId is -1")
 			return Result.success()
 		}
-
 		var mediaPlayer: MediaPlayer? = null
-		val result = runCatching {
-			val alarm = alarmRepository.get(alarmId) ?: run {
-				Log.d("AlarmNotifyWorker", "alarm is null")
-				return Result.success()
-			}
+
+		return try {
+			val alarm = alarmRepository.get(alarmId) ?: return Result.success()
 			alarmNotificationManager.notify(alarm)
 
 			appAlarmManager.registerAlarm(
@@ -62,15 +57,13 @@ class AlarmNotifyWorker @AssistedInject constructor(
 			mediaPlayer?.start()
 
 			delay(180000L)
-		}
 
-		mediaPlayer?.stop()
-		mediaPlayer?.release()
-
-		return if (result.isFailure) {
-			Result.failure()
-		} else {
 			Result.success()
+		} catch (e: Exception) {
+			Result.failure()
+		} finally {
+			mediaPlayer?.stop()
+			mediaPlayer?.release()
 		}
 	}
 
