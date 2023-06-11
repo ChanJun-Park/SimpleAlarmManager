@@ -15,12 +15,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jingom.simplealarmmanager.R
-import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeRoute
 import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeScreen
 
 @Composable
@@ -52,8 +50,6 @@ fun AlarmHomeScreen(
 		onPermissionDenied = onFinish
 	)
 }
-
-private fun getAlarmIdFromArgs(navBackStackEntry: NavBackStackEntry): Long? = navBackStackEntry.arguments?.getString(TimeAlarmHomeRoute.DETAIL_SCREEN_ARG)?.toLongOrNull()
 
 @Composable
 private fun NotificationPermissionAlert(
