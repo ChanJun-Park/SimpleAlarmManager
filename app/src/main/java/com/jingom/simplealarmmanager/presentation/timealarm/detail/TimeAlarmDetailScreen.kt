@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -29,9 +30,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -47,6 +50,8 @@ import com.jingom.simplealarmmanager.common.date.formatWithLocale
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeState
 import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimeAlarmDetailEditState.Companion.canEdit
+import com.jingom.simplealarmmanager.presentation.timer.TimerButtons
+import com.jingom.simplealarmmanager.presentation.timer.TimerState
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
@@ -54,6 +59,7 @@ import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeAlarmDetailScreen(
 	alarmId: Long?,
@@ -63,26 +69,36 @@ fun TimeAlarmDetailScreen(
 	val alarmDetailState by viewModel.timeAlarmDetailState.collectAsStateWithLifecycle()
 	val (alarmNameForTextField, setAlarmNameForTextField) = viewModel.alarmNameForTextField
 
-	TimeAlarmDetailScreen(
-		timeAlarmDetailState = alarmDetailState,
-		alarmNameForTextField = alarmNameForTextField,
-		onAlarmNameEdited = setAlarmNameForTextField,
-		onAlarmTimeChanged = viewModel::changeAlarmTime,
-		onCancelClick = timeAlarmHomeState::navigateToListFromDetail,
-		onSaveClick = viewModel::saveAlarm,
-		onDeleteClick = viewModel::deleteAlarm
-	)
+	val scaffoldState = rememberBottomSheetScaffoldState()
+	BottomSheetScaffold(
+		scaffoldState = scaffoldState,
+		sheetContent = {
+			TimerButtons(
+				timerState = TimerState.OnGoing(10000L)
+			)
+		}
+	) {
+		TimeAlarmDetailScreen(
+			timeAlarmDetailState = alarmDetailState,
+			alarmNameForTextField = alarmNameForTextField,
+			onAlarmNameEdited = setAlarmNameForTextField,
+			onAlarmTimeChanged = viewModel::changeAlarmTime,
+			onCancelClick = timeAlarmHomeState::navigateToListFromDetail,
+			onSaveClick = viewModel::saveAlarm,
+			onDeleteClick = viewModel::deleteAlarm
+		)
 
-	LaunchedEffect(key1 = alarmId) {
-		viewModel.init(alarmId)
-	}
+		LaunchedEffect(key1 = alarmId) {
+			viewModel.init(alarmId)
+		}
 
-	(alarmDetailState as? TimeAlarmDetailState.Success)?.let {
-		if (needToFinishDetailScreen(it.editState)) {
-			LaunchedEffect(key1 = true) {
-				timeAlarmHomeState.navigateToListFromDetail()
+		(alarmDetailState as? TimeAlarmDetailState.Success)?.let {
+			if (needToFinishDetailScreen(it.editState)) {
+				LaunchedEffect(key1 = true) {
+					timeAlarmHomeState.navigateToListFromDetail()
+				}
+				return@let
 			}
-			return@let
 		}
 	}
 }

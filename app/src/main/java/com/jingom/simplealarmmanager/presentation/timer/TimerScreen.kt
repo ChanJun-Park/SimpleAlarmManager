@@ -41,7 +41,7 @@ fun TimerScreen(leftTimeMillis: Long) {
 }
 
 @Composable
-private fun TimerButtons(
+fun TimerButtons(
 	timerState: TimerState,
 	onStartClick: () -> Unit = {},
 	onPauseClick: () -> Unit = {},

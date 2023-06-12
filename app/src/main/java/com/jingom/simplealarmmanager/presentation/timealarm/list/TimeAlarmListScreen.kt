@@ -17,18 +17,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,36 +48,55 @@ import com.jingom.simplealarmmanager.common.date.DateTimeFormatters
 import com.jingom.simplealarmmanager.common.date.formatWithLocale
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeState
+import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimeAlarmDetailScreen
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import java.time.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeAlarmListScreen(
 	timeAlarmHomeState: TimeAlarmHomeState,
 	viewModel: TimeAlarmListViewModel = hiltViewModel()
 ) {
 	val alarmListState by viewModel.timeAlarmListState.collectAsStateWithLifecycle()
+	val scaffoldState = rememberBottomSheetScaffoldState()
 
-	TimeAlarmListScreen(
-		alarmListState = alarmListState,
-		onAlarmClick = timeAlarmHomeState::navigateToDetail,
-		onAddAlarmClick = timeAlarmHomeState::navigateToAdd,
-		onAlarmOnToggle = viewModel::alarmOnToggle,
-	)
+	BottomSheetScaffold(
+		scaffoldState = scaffoldState,
+		sheetDragHandle = {
 
-	LaunchedEffect(key1 = true) {
-		viewModel.init()
+		},
+		sheetPeekHeight = 300.dp,
+		sheetContent = {
+			TimeAlarmDetailScreen(
+				alarmId = null,
+				timeAlarmHomeState = timeAlarmHomeState
+			)
+		}
+	) {
+		TimeAlarmListScreen(
+			alarmListState = alarmListState,
+			onAlarmClick = timeAlarmHomeState::navigateToDetail,
+			onAddAlarmClick = timeAlarmHomeState::navigateToAdd,
+			onAlarmOnToggle = viewModel::alarmOnToggle,
+			modifier = Modifier.padding(it)
+		)
+
+		LaunchedEffect(key1 = true) {
+			viewModel.init()
+		}
 	}
 }
 
 @Composable
 fun TimeAlarmListScreen(
 	alarmListState: TimeAlarmListState,
+	modifier: Modifier = Modifier,
 	onAlarmClick: (Alarm) -> Unit = {},
 	onAddAlarmClick: () -> Unit = {},
 	onAlarmOnToggle: (Alarm) -> Unit = {}
 ) {
-	Column(Modifier.fillMaxSize()) {
+	Column(modifier.fillMaxSize()) {
 		AlarmListHeader(onAddAlarmClick = onAddAlarmClick)
 		when (alarmListState) {
 			is TimeAlarmListState.Loading -> AlarmListLoading()
