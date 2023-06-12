@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">심플 알람 매니저</string>
-    <string name="alarm_list">알람 리스트</string>
-    <string name="alarm_empty">설정된 알람이 없습니다.</string>
     <string name="add_alarm">알람 추가</string>
-    <string name="delete_alarm">알람 삭제</string>
-    <string name="save_alarm">저장</string>
-    <string name="cancel_alarm_edit">취소</string>
+    <string name="alarm">알람</string>
+    <string name="alarm_empty">설정된 알람이 없습니다.</string>
+    <string name="alarm_list">알람 리스트</string>
     <string name="alarm_name">알람 이름</string>
     <string name="alarm_time">알람 시간</string>
+    <string name="app_name">심플 알람 매니저</string>
+    <string name="back_button">뒤로가기 버튼</string>
+    <string name="cancel_alarm_edit">취소</string>
+    <string name="cannot_working_notification_permission_revoked">알림 권한이 없어 동작할 수 없습니다.</string>
+    <string name="confirm">확인</string>
+    <string name="resume">계속</string>
+    <string name="delete">삭제</string>
+    <string name="delete_alarm">알람 삭제</string>
+    <string name="edit_alarm">알람 편집</string>
     <string name="edit_alarm_time">알람 시간 수정</string>
     <string name="failed_to_loading_alarm">알림을 로드하는데 실패했습니다.</string>
-    <string name="edit_alarm">알람 편집</string>
-    <string name="back_button">뒤로가기 버튼</string>
-    <string name="alarm">알람</string>
+    <string name="go_setting_to_grant_notification_permission">앱 설정 화면에서 알림 권한을 부여해주세요.</string>
     <string name="notification_permission_required">알림 권한 필요</string>
     <string name="notification_permission_required_description">앱에서 알람 기능이 정상동작 하기 위해서는 알림 권한이 필요합니다.</string>
-    <string name="cannot_working_notification_permission_revoked">알림 권한이 없어 동작할 수 없습니다.</string>
-    <string name="go_setting_to_grant_notification_permission">앱 설정 화면에서 알림 권한을 부여해주세요.</string>
-    <string name="confirm">확인</string>
+    <string name="pause">일시정지</string>
+    <string name="save_alarm">저장</string>
+    <string name="start">시작</string>
     <string name="swipe_to_cancel_alarm">(옆으로 밀어서 알람 해제)</string>
 </resources>

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="common_horizontal_space">20dp</dimen>
+    <dimen name="common_horizontal_button_padding">20dp</dimen>
+    <dimen name="common_button_minimum_width">100dp</dimen>
 </resources>
