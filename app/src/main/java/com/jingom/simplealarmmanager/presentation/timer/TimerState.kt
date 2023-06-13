@@ -7,10 +7,12 @@ sealed class TimerState {
 	): TimerState()
 
 	data class OnGoing(
+		val selectedTimeInMillis: Long,
 		val timeToLeftInMillis: Long
 	): TimerState()
 
 	data class Paused(
+		val selectedTimeInMillis: Long,
 		val timeToLeftInMillis: Long
 	): TimerState()
 }
