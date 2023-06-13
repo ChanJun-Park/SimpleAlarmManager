@@ -72,6 +72,13 @@ fun TimerCircle(
 	modifier: Modifier = Modifier
 ) {
 	Canvas(modifier) {
+		drawCircle(
+			color = Color.Blue.copy(alpha = 0.3f),
+			style = Stroke(
+				width = 1.dp.toPx(),
+				cap = StrokeCap.Round
+			),
+		)
 		drawArc(
 			color = Color.Blue,
 			startAngle = -90f,
