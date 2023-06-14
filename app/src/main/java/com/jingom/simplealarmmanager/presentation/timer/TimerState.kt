@@ -1,18 +1,24 @@
 package com.jingom.simplealarmmanager.presentation.timer
 
-sealed class TimerState {
+sealed interface TimerState {
+
+	val selectedTimeInMillis: Long
+	val leftTimeInMillis: Long
 
 	data class ReadyToStart(
-		val selectedTimeInMillis: Long
-	): TimerState()
+		override val selectedTimeInMillis: Long
+	): TimerState {
+		override val leftTimeInMillis: Long
+			get() = selectedTimeInMillis
+	}
 
 	data class OnGoing(
-		val selectedTimeInMillis: Long,
-		val timeToLeftInMillis: Long
-	): TimerState()
+		override val selectedTimeInMillis: Long,
+		override val leftTimeInMillis: Long
+	): TimerState
 
 	data class Paused(
-		val selectedTimeInMillis: Long,
-		val timeToLeftInMillis: Long
-	): TimerState()
+		override val selectedTimeInMillis: Long,
+		override val leftTimeInMillis: Long
+	): TimerState
 }

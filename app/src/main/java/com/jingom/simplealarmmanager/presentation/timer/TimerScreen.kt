@@ -3,6 +3,7 @@ package com.jingom.simplealarmmanager.presentation.timer
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,6 +64,14 @@ fun TimerCircleLayout(
 				.padding(dimensionResource(R.dimen.common_horizontal_space))
 				.align(Alignment.TopCenter)
 		)
+
+		TimerText(
+			timerState = timerState,
+			modifier = Modifier
+				.size(circleDiameter.pxToDp())
+				.padding(dimensionResource(R.dimen.common_horizontal_space))
+				.align(Alignment.TopCenter)
+		)
 	}
 }
 
@@ -94,10 +103,99 @@ fun TimerCircle(
 
 fun TimerState.getCircleAngle(): Float {
 	return when (this) {
-		is TimerState.OnGoing -> 360f * (timeToLeftInMillis / selectedTimeInMillis.toFloat())
-		is TimerState.Paused -> 360f * (timeToLeftInMillis / selectedTimeInMillis.toFloat())
+		is TimerState.OnGoing -> 360f * (leftTimeInMillis / selectedTimeInMillis.toFloat())
+		is TimerState.Paused -> 360f * (leftTimeInMillis / selectedTimeInMillis.toFloat())
 		is TimerState.ReadyToStart -> 360f
 	}
+}
+
+@Composable
+private fun TimerText(
+	timerState: TimerState,
+	modifier: Modifier = Modifier
+) {
+	Box(modifier) {
+		Text(
+			text = timerState.getSelectedTimeText(),
+			style = MaterialTheme.typography.bodyLarge,
+			modifier = Modifier
+				.align(Alignment.TopCenter)
+				.padding(vertical = 50.dp)
+		)
+
+		Text(
+			text = timerState.getLeftTimeText(),
+			style = MaterialTheme.typography.headlineLarge,
+			modifier = Modifier
+				.align(Alignment.Center)
+				.padding(vertical = 50.dp)
+		)
+	}
+}
+
+@Composable
+fun TimerState.getSelectedTimeText(): String {
+
+	var selectedTimeInSeconds = this.selectedTimeInMillis
+
+	val hour = selectedTimeInSeconds / 3600
+	selectedTimeInSeconds -= hour * 3600
+
+	val minute = selectedTimeInSeconds / 60
+	selectedTimeInSeconds -= minute * 60
+
+	val second = selectedTimeInSeconds
+
+	val stringBuilder = StringBuilder()
+
+	if (hour != 0L) {
+		stringBuilder.append(hour).append(stringResource(R.string.hour_abbr))
+	}
+
+	if (hour != 0L && minute != 0L) {
+		stringBuilder.append(" ")
+	}
+
+	if (minute != 0L) {
+		stringBuilder.append(minute).append(stringResource(R.string.minute_abbr))
+	}
+
+	if (minute != 0L && second != 0L) {
+		stringBuilder.append(" ")
+	}
+
+	if (second != 0L) {
+		stringBuilder.append(second).append(stringResource(R.string.second_abbr))
+	}
+
+	return stringBuilder.toString()
+}
+
+fun TimerState.getLeftTimeText(): String {
+
+	var timeToLeftInSeconds = leftTimeInMillis
+
+	val hour = timeToLeftInSeconds / 3600
+	timeToLeftInSeconds -= hour * 3600
+
+	val minute = timeToLeftInSeconds / 60
+	timeToLeftInSeconds -= minute * 60
+
+	val second = timeToLeftInSeconds
+
+	val stringBuilder = StringBuilder()
+
+	if (hour != 0L) {
+		stringBuilder.append(hour).append(" : ")
+	}
+
+	if (hour != 0L || minute != 0L) {
+		stringBuilder.append(minute).append(" : ")
+	}
+
+	stringBuilder.append(second)
+
+	return stringBuilder.toString()
 }
 
 @Preview(showBackground = true)
@@ -108,7 +206,7 @@ private fun TimerCircleLayoutPreview() {
 		TimerCircleLayout(
 			timerState = TimerState.OnGoing(
 				selectedTimeInMillis = 1500L,
-				timeToLeftInMillis = 1000L
+				leftTimeInMillis = 1000L
 			)
 		)
 	}
@@ -192,7 +290,7 @@ private fun TimerButtonsPreview() {
 		TimerButtons(
 			timerState = TimerState.OnGoing(
 				selectedTimeInMillis = 1500L,
-				timeToLeftInMillis = 1000L
+				leftTimeInMillis = 1000L
 			)
 		)
 	}

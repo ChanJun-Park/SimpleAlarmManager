@@ -23,4 +23,10 @@
     <string name="save_alarm">Save</string>
     <string name="start">Start</string>
     <string name="swipe_to_cancel_alarm">(Swipe to Cancel Alarm)</string>
+    <string name="hour">hour</string>
+    <string name="minute">minute</string>
+    <string name="second">second</string>
+    <string name="hour_abbr">h</string>
+    <string name="minute_abbr">m</string>
+    <string name="second_abbr">s</string>
 </resources>
