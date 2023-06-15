@@ -30,4 +30,5 @@
     <string name="hour_abbr">시간</string>
     <string name="minute_abbr">분</string>
     <string name="second_abbr">초</string>
+    <string name="screen_time_alarm_list">시간 설정 알람 리스트 화면</string>
 </resources>

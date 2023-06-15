@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
 
 @Composable
-fun rememberAlarmHomeState(
+fun rememberTimeAlarmHomeState(
 	navController: NavHostController = rememberNavController()
 ): TimeAlarmHomeState = remember(navController) {
 	TimeAlarmHomeState(navController)

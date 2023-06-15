@@ -13,7 +13,7 @@ import com.jingom.simplealarmmanager.presentation.timealarm.list.TimeAlarmListSc
 
 @Composable
 fun TimeAlarmHomeScreen(
-	timeAlarmHomeState: TimeAlarmHomeState = rememberAlarmHomeState(),
+	timeAlarmHomeState: TimeAlarmHomeState = rememberTimeAlarmHomeState(),
 ) {
 	Surface(modifier = Modifier.fillMaxSize()) {
 		NavHost(

@@ -29,4 +29,5 @@
     <string name="hour_abbr">h</string>
     <string name="minute_abbr">m</string>
     <string name="second_abbr">s</string>
+    <string name="screen_time_alarm_list">Timer Alarm List Screen</string>
 </resources>
