@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,11 +54,12 @@ fun TimeAlarmListScreen(
 	viewModel: TimeAlarmListViewModel = hiltViewModel()
 ) {
 	val alarmListState by viewModel.timeAlarmListState.collectAsStateWithLifecycle()
+	val context = LocalContext.current
 
 	TimeAlarmListScreen(
 		alarmListState = alarmListState,
-		onAlarmClick = timeAlarmHomeState::navigateToDetail,
-		onAddAlarmClick = timeAlarmHomeState::navigateToAdd,
+		onAlarmClick = { timeAlarmHomeState.navigateToDetail(context, it) },
+		onAddAlarmClick = { timeAlarmHomeState.navigateToAdd(context) },
 		onAlarmOnToggle = viewModel::alarmOnToggle,
 	)
 

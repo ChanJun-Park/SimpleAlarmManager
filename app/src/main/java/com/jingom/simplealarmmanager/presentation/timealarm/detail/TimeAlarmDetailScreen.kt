@@ -45,7 +45,6 @@ import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.common.date.DateTimeFormatters
 import com.jingom.simplealarmmanager.common.date.formatWithLocale
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
-import com.jingom.simplealarmmanager.presentation.timealarm.TimeAlarmHomeState
 import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimeAlarmDetailEditState.Companion.canEdit
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -57,7 +56,7 @@ import java.time.LocalTime
 @Composable
 fun TimeAlarmDetailScreen(
 	alarmId: Long?,
-	timeAlarmHomeState: TimeAlarmHomeState,
+	navigateBack: () -> Unit = {},
 	viewModel: TimeAlarmDetailViewModel = hiltViewModel()
 ) {
 	val alarmDetailState by viewModel.timeAlarmDetailState.collectAsStateWithLifecycle()
@@ -68,7 +67,7 @@ fun TimeAlarmDetailScreen(
 		alarmNameForTextField = alarmNameForTextField,
 		onAlarmNameEdited = setAlarmNameForTextField,
 		onAlarmTimeChanged = viewModel::changeAlarmTime,
-		onCancelClick = timeAlarmHomeState::navigateToListFromDetail,
+		onCancelClick = navigateBack,
 		onSaveClick = viewModel::saveAlarm,
 		onDeleteClick = viewModel::deleteAlarm
 	)
@@ -80,7 +79,7 @@ fun TimeAlarmDetailScreen(
 	(alarmDetailState as? TimeAlarmDetailState.Success)?.let {
 		if (needToFinishDetailScreen(it.editState)) {
 			LaunchedEffect(key1 = true) {
-				timeAlarmHomeState.navigateToListFromDetail()
+				navigateBack()
 			}
 			return@let
 		}

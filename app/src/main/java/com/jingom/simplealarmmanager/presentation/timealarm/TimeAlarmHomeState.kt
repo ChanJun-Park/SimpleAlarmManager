@@ -1,43 +1,24 @@
 package com.jingom.simplealarmmanager.presentation.timealarm
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.jingom.simplealarmmanager.domain.model.alarm.Alarm
+import com.jingom.simplealarmmanager.presentation.timealarm.detail.TimerAlarmDetailActivity
 
 @Composable
-fun rememberTimeAlarmHomeState(
-	navController: NavHostController = rememberNavController()
-): TimeAlarmHomeState = remember(navController) {
-	TimeAlarmHomeState(navController)
+fun rememberTimeAlarmHomeState(): TimeAlarmHomeState = remember {
+	TimeAlarmHomeState()
 }
 
 @Stable
-class TimeAlarmHomeState(
-	val navController: NavHostController
-) {
-	private val currentRoute: String?
-		get() = navController.currentDestination?.route
-
-	fun navigateToDetail(alarm: Alarm) {
-		val detailRoute = TimeAlarmHomeRoute.getDetailScreenRouteWithArg(alarm.id)
-
-		navController.navigate(detailRoute)
+class TimeAlarmHomeState {
+	fun navigateToDetail(context: Context, alarm: Alarm) {
+		TimerAlarmDetailActivity.startTimerAlarmDetailActivity(context, alarm.id)
 	}
 
-	fun navigateToAdd() {
-		val addRoute = TimeAlarmHomeRoute.getDetailScreenRouteWithoutArg()
-
-		navController.navigate(addRoute)
-	}
-
-	fun navigateToListFromDetail() {
-		if (currentRoute != TimeAlarmHomeRoute.DETAIL_SCREEN) {
-			return
-		}
-
-		navController.popBackStack()
+	fun navigateToAdd(context: Context) {
+		TimerAlarmDetailActivity.startTimerAlarmDetailActivity(context, null)
 	}
 }
