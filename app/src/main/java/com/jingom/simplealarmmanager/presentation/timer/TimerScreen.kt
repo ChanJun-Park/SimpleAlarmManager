@@ -19,6 +19,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,37 +33,77 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.common.pxToDp
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
+import java.util.UUID
 import kotlin.math.min
 
 @Composable
-fun TimerScreen() {
+fun TimerScreen(
+	viewModel: TimerViewModel = hiltViewModel()
+) {
+	val timerState = viewModel.timerState.collectAsStateWithLifecycle()
+	val selectedTimeInSecond by getSelectedTimeInSecondState(timerState)
+	val leftTimeInSecond by getLeftTimeInSecondState(timerState)
+
+	TimerScreen(
+		selectedTimeInSecond = selectedTimeInSecond,
+		leftTimeInSecond = leftTimeInSecond,
+		circleAngleProvider = { timerState.value.getCircleAngle() }
+	)
+	LaunchedEffect(true) {
+		viewModel.startTimer()
+	}
+}
+
+@Composable
+private fun getSelectedTimeInSecondState(timerState: State<TimerState>) = remember(timerState.value.id) {
+	derivedStateOf {
+		timerState.value.selectedTimeInMillis / 1000
+	}
+}
+
+@Composable
+private fun getLeftTimeInSecondState(timerState: State<TimerState>) = remember(timerState.value.id) {
+	derivedStateOf {
+		timerState.value.leftTimeInMillis / 1000
+	}
 
 }
 
 @Composable
-fun TimerScreen(leftTimeMillis: Long) {
+fun TimerScreen(
+	selectedTimeInSecond: Long,
+	leftTimeInSecond: Long,
+	circleAngleProvider: () -> Float
+) {
 	Column(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.SpaceBetween,
 		modifier = Modifier.fillMaxSize()
 	) {
-
-
+		TimerCircleLayout(
+			selectedTimeInSecond = selectedTimeInSecond,
+			leftTimeInSecond = leftTimeInSecond,
+			circleAngleProvider = circleAngleProvider
+		)
 	}
 }
 
 @Composable
 fun TimerCircleLayout(
-	timerState: TimerState
+	selectedTimeInSecond: Long,
+	leftTimeInSecond: Long,
+	circleAngleProvider: () -> Float
 ) {
 	BoxWithConstraints(Modifier.fillMaxSize()) {
 		val circleDiameter = min(constraints.maxWidth, constraints.maxHeight)
 
 		TimerCircle(
-			timerState = timerState,
+			circleAngleProvider = circleAngleProvider,
 			modifier = Modifier
 				.size(circleDiameter.pxToDp())
 				.padding(dimensionResource(R.dimen.common_horizontal_space))
@@ -66,7 +111,8 @@ fun TimerCircleLayout(
 		)
 
 		TimerText(
-			timerState = timerState,
+			selectedTimeInSecond = selectedTimeInSecond,
+			leftTimeInSecond = leftTimeInSecond,
 			modifier = Modifier
 				.size(circleDiameter.pxToDp())
 				.padding(dimensionResource(R.dimen.common_horizontal_space))
@@ -77,7 +123,7 @@ fun TimerCircleLayout(
 
 @Composable
 fun TimerCircle(
-	timerState: TimerState,
+	circleAngleProvider: () -> Float,
 	modifier: Modifier = Modifier
 ) {
 	Canvas(modifier) {
@@ -91,7 +137,7 @@ fun TimerCircle(
 		drawArc(
 			color = Color.Blue,
 			startAngle = -90f,
-			sweepAngle = timerState.getCircleAngle(),
+			sweepAngle = circleAngleProvider(),
 			style = Stroke(
 				width = 10.dp.toPx(),
 				cap = StrokeCap.Round
@@ -111,12 +157,13 @@ fun TimerState.getCircleAngle(): Float {
 
 @Composable
 private fun TimerText(
-	timerState: TimerState,
+	selectedTimeInSecond: Long,
+	leftTimeInSecond: Long,
 	modifier: Modifier = Modifier
 ) {
 	Box(modifier) {
 		Text(
-			text = timerState.getSelectedTimeText(),
+			text = getSelectedTimeText(selectedTimeInSecond),
 			style = MaterialTheme.typography.bodyLarge,
 			modifier = Modifier
 				.align(Alignment.TopCenter)
@@ -124,7 +171,7 @@ private fun TimerText(
 		)
 
 		Text(
-			text = timerState.getLeftTimeText(),
+			text = getLeftTimeText(leftTimeInSecond),
 			style = MaterialTheme.typography.headlineLarge,
 			modifier = Modifier
 				.align(Alignment.Center)
@@ -134,17 +181,18 @@ private fun TimerText(
 }
 
 @Composable
-fun TimerState.getSelectedTimeText(): String {
+fun getSelectedTimeText(
+	selectedTimeInSecond: Long,
+): String {
+	var currentSelectedTimeInSecond = selectedTimeInSecond
 
-	var selectedTimeInSeconds = this.selectedTimeInMillis
+	val hour = currentSelectedTimeInSecond / 3600
+	currentSelectedTimeInSecond -= hour * 3600
 
-	val hour = selectedTimeInSeconds / 3600
-	selectedTimeInSeconds -= hour * 3600
+	val minute = currentSelectedTimeInSecond / 60
+	currentSelectedTimeInSecond -= minute * 60
 
-	val minute = selectedTimeInSeconds / 60
-	selectedTimeInSeconds -= minute * 60
-
-	val second = selectedTimeInSeconds
+	val second = currentSelectedTimeInSecond
 
 	val stringBuilder = StringBuilder()
 
@@ -171,9 +219,11 @@ fun TimerState.getSelectedTimeText(): String {
 	return stringBuilder.toString()
 }
 
-fun TimerState.getLeftTimeText(): String {
+fun getLeftTimeText(
+	leftTimeInSecond: Long
+): String {
 
-	var timeToLeftInSeconds = leftTimeInMillis
+	var timeToLeftInSeconds = leftTimeInSecond
 
 	val hour = timeToLeftInSeconds / 3600
 	timeToLeftInSeconds -= hour * 3600
@@ -204,10 +254,9 @@ fun TimerState.getLeftTimeText(): String {
 private fun TimerCircleLayoutPreview() {
 	SimpleAlarmManagerTheme {
 		TimerCircleLayout(
-			timerState = TimerState.OnGoing(
-				selectedTimeInMillis = 1500L,
-				leftTimeInMillis = 1000L
-			)
+			selectedTimeInSecond = 10L,
+			leftTimeInSecond = 5L,
+			circleAngleProvider = { 180f }
 		)
 	}
 }
@@ -289,6 +338,7 @@ private fun TimerButtonsPreview() {
 	SimpleAlarmManagerTheme {
 		TimerButtons(
 			timerState = TimerState.OnGoing(
+				id = UUID.randomUUID().mostSignificantBits,
 				selectedTimeInMillis = 1500L,
 				leftTimeInMillis = 1000L
 			)
