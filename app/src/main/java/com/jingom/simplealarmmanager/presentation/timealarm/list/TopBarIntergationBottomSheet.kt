@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.jingom.simplealarmmanager.R
 import com.jingom.simplealarmmanager.ui.theme.SimpleAlarmManagerTheme
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 enum class BottomSheetVisibilityState {
@@ -77,7 +78,8 @@ fun TopBarIntegrationBottomSheetScaffold(
 		topBar = topBar,
 		body = content,
 		sheetHeaderOnlyForMeasure = sheetHeader,
-		bottomSheet = { layoutHeight, topBarHeight, sheetHeaderHeight ->
+		sheetContentOnlyForMeasure = sheetContent,
+		bottomSheet = { layoutHeight, topBarHeight, sheetHeaderHeight, sheetContentHeight ->
 			val scrollState = rememberScrollState()
 			val sheetPickHeightInPx = with(LocalDensity.current) {
 				sheetPickHeight.toPx()
@@ -89,6 +91,7 @@ fun TopBarIntegrationBottomSheetScaffold(
 						layoutHeight = layoutHeight.toFloat(),
 						topBarHeight = topBarHeight.toFloat(),
 						sheetHeaderHeight = sheetHeaderHeight.toFloat(),
+						sheetContentHeight = sheetContentHeight.toFloat(),
 						peekHeight = sheetPickHeightInPx
 					)
 					.bottomSheetNestedScroll(swipeableState, scrollState)
@@ -119,6 +122,7 @@ private fun Modifier.bottomSheetSwipeable(
 	topBarHeight: Float,
 	sheetHeaderHeight: Float,
 	layoutHeight: Float,
+	sheetContentHeight: Float,
 	peekHeight: Float
 ): Modifier {
 	return this.swipeable(
@@ -126,7 +130,7 @@ private fun Modifier.bottomSheetSwipeable(
 		orientation = Orientation.Vertical,
 		anchors = mapOf(
 			topBarHeight - sheetHeaderHeight to BottomSheetVisibilityState.EXPANDED,
-			layoutHeight - peekHeight to BottomSheetVisibilityState.COLLAPSED,
+			layoutHeight - max(peekHeight, sheetHeaderHeight + sheetContentHeight) to BottomSheetVisibilityState.COLLAPSED,
 			layoutHeight to BottomSheetVisibilityState.HIDE,
 		)
 	)
@@ -179,8 +183,9 @@ private fun TopBarIntegrationBottomSheetLayout(
 	contentColor: Color,
 	topBar: @Composable (() -> Unit)?,
 	body: @Composable (innerPadding: PaddingValues) -> Unit,
-	bottomSheet: @Composable (layoutHeight: Int, topBarHeight: Int, sheetHeaderHeight: Int) -> Unit,
+	bottomSheet: @Composable (layoutHeight: Int, topBarHeight: Int, sheetHeaderHeight: Int, sheetContentHeight: Int) -> Unit,
 	sheetHeaderOnlyForMeasure: @Composable () -> Unit = { DefaultBottomSheetHeader() },
+	sheetContentOnlyForMeasure: @Composable () -> Unit
 ) {
 	SubcomposeLayout { constraints ->
 		val layoutWidth = constraints.maxWidth
@@ -199,11 +204,16 @@ private fun TopBarIntegrationBottomSheetLayout(
 			sheetHeaderOnlyForMeasure()
 		}[0].measure(looseConstraints)
 
+		val sheetContentPlaceable = subcompose(Unit) {
+			sheetContentOnlyForMeasure()
+		}[0].measure(looseConstraints)
+
 		val sheetPlaceable = subcompose(TopBarIntegrationBottomSheetLayoutSlot.Sheet) {
 			bottomSheet(
 				layoutHeight = layoutHeight,
 				topBarHeight = topBarHeight,
-				sheetHeaderHeight = sheetHeaderPlaceable.height
+				sheetHeaderHeight = sheetHeaderPlaceable.height,
+				sheetContentHeight = sheetContentPlaceable.height
 			)
 		}[0].measure(looseConstraints.copy(maxHeight = layoutHeight - topBarHeight + sheetHeaderPlaceable.height))
 		val sheetOffsetY = sheetOffset().roundToInt()
@@ -278,13 +288,17 @@ private fun TopBarIntegrationBottomSheetScaffoldCollapsedPreview() {
 				}
 			},
 			sheetContent = {
-				Box(
+				Column(
 					modifier = Modifier
 						.fillMaxWidth()
-						.height(100.dp)
 						.background(Color.White)
 				) {
-					Text(text = "Bottom Sheet Content")
+					Text(text = "test")
+					Text(text = "test")
+					Text(text = "test")
+					Text(text = "test")
+					Text(text = "test")
+					Text(text = "test")
 				}
 			},
 			sheetState = BottomSheetVisibilityState.COLLAPSED
@@ -309,14 +323,14 @@ private fun TopBarIntegrationBottomSheetScaffoldHidePreview() {
 				}
 			},
 			sheetContent = {
-//				Box(
-//					modifier = Modifier
-//						.fillMaxWidth()
-//						.height(100.dp)
-//						.background(Color.White)
-//				) {
-//					Text(text = "Bottom Sheet Content")
-//				}
+				Box(
+					modifier = Modifier
+						.fillMaxWidth()
+						.height(100.dp)
+						.background(Color.White)
+				) {
+					Text(text = "Bottom Sheet Content")
+				}
 			},
 			sheetState = BottomSheetVisibilityState.HIDE
 		) {
